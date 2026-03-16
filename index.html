@@ -375,9 +375,7 @@ footer p{font-size:.78rem;color:var(--muted);}
 /* Modal luôn dùng cursor bình thường dù ở trang nào */
 .modal-overlay,.modal,.modal *{cursor:auto !important;}
 .modal a,.modal button,.modal-overlay .mbtn,.bubble-item,.bubble-item *{cursor:pointer !important;}
-#baitap-page.active{display:block;}
-#intro-page.hidden{display:none;}
-#dethi-page.hidden{display:none;}
+/* Không dùng .active hay .hidden để toggle — JS dùng el.style.display trực tiếp */
 
 .bt-page-wrap{
   max-width:1280px;margin:0 auto;
@@ -550,7 +548,6 @@ footer p{font-size:.78rem;color:var(--muted);}
 #dethi-page{display:none;padding-top:66px;min-height:100vh;cursor:auto;}
 #dethi-page *{cursor:auto;}
 #dethi-page a,#dethi-page button{cursor:pointer;}
-#dethi-page.active{display:block;}
 
 /* ── File grid ── */
 .file-grid{
@@ -1135,26 +1132,33 @@ footer p{font-size:.78rem;color:var(--muted);}
 <!-- Hidden iframe pool (giữ trạng thái bài đang làm) -->
 <div class="iframe-pool" id="iframePool"></div>
 
-<script src="assignments.js"></script>
 <!-- Dữ liệu bài tập — chỉnh file này để thêm/sửa bài -->
-<script src="data-baitap.js"></script>
+<script>
+// Fallback nếu data-baitap.js không tồn tại
+window.BAITAP_LIST = window.BAITAP_LIST || [];
+window.HW_FILES    = window.HW_FILES    || [];
+</script>
+<script src="data-baitap.js" onerror="console.warn('data-baitap.js not found')"></script>
 <!-- Danh sách file đề thi — chỉnh file này để thêm/xoá file -->
-<script src="data-files.js"></script>
+<script src="data-files.js" onerror="console.warn('data-files.js not found')"></script>
 
 <script>
 // ─── PAGE SWITCH ───────────────────────────
 const PAGES = ['intro','baitap','dethi'];
 function showPage(p) {
   PAGES.forEach(id => {
-    const el = document.getElementById(id+'-page');
-    if (el) el.classList.toggle('hidden', id !== p);
-    if (id === 'baitap') el?.classList.toggle('active', id === p);
-    if (id === 'dethi')  el?.classList.toggle('active', id === p);
-    // desktop links
-    const lnk = document.getElementById('link-'+id);
+    const el = document.getElementById(id + '-page');
+    if (!el) return;
+    // Show/hide page
+    el.style.display = (id === p) ? 'block' : 'none';
+    // Active class (for CSS that depends on it)
+    el.classList.toggle('active', id === p);
+    el.classList.toggle('hidden', id !== p);
+    // Desktop nav links
+    const lnk = document.getElementById('link-' + id);
     if (lnk) lnk.classList.toggle('active', id === p);
-    // mobile links
-    const mlnk = document.getElementById('mlink-'+id);
+    // Mobile nav links
+    const mlnk = document.getElementById('mlink-' + id);
     if (mlnk) mlnk.classList.toggle('active', id === p);
   });
   window.scrollTo({top:0, behavior:'smooth'});
@@ -1287,21 +1291,22 @@ function buildFileGrid() {
     const path = 'hwfiles/' + f.file;
 
     const card = document.createElement('div');
+    const safeName = (f.name || f.file);
     card.className = 'file-card';
+    card.dataset.path = path;
+    card.dataset.name = safeName;
+    card.dataset.icon = icon;
+    card.dataset.ext  = ext;
     card.innerHTML = `
       <div class="file-thumb ${thumbCls}">${icon}</div>
-      <div class="file-name">${f.name || f.file}</div>
+      <div class="file-name">${safeName}</div>
       <div class="file-meta">
         <span class="file-type-badge ${badgeCls}">${badgeTxt}</span>
         ${f.size ? `<span class="file-size">${f.size}</span>` : ''}
       </div>
       <div class="file-actions">
-        <button class="file-btn file-btn-view" onclick="openFModal('${path}','${(f.name||f.file).replace(/'/g,'\\'')}','${icon}','${ext}')">
-          👁️ Xem
-        </button>
-        <a class="file-btn file-btn-dl" href="${path}" download="${f.file}" target="_blank">
-          ⬇️ Tải
-        </a>
+        <button class="file-btn file-btn-view" data-action="view">👁️ Xem</button>
+        <a class="file-btn file-btn-dl" href="${path}" download="${f.file}" target="_blank">⬇️ Tải</a>
       </div>`;
 
     card.addEventListener('mousemove', e => {
@@ -1309,11 +1314,11 @@ function buildFileGrid() {
       card.style.setProperty('--mx', ((e.clientX-r.left)/r.width*100)+'%');
       card.style.setProperty('--my', ((e.clientY-r.top)/r.height*100)+'%');
     });
-    // click card body (not buttons) → preview
     card.addEventListener('click', e => {
-      if (!e.target.closest('.file-actions')) {
-        openFModal(path, f.name||f.file, icon, ext);
-      }
+      const btn = e.target.closest('[data-action="view"]');
+      const dlLink = e.target.closest('.file-btn-dl');
+      if (dlLink) return; // let download link work normally
+      openFModal(card.dataset.path, card.dataset.name, card.dataset.icon, card.dataset.ext);
     });
 
     grid.appendChild(card);
@@ -1582,9 +1587,11 @@ const dot=document.getElementById('dot'), ring=document.getElementById('ring');
 let mx=0,my=0,rx=0,ry=0;
 
 function isOnBaitap() {
-  // Trang bài tập đang active VÀ modal đang đóng
-  return document.getElementById('baitap-page').classList.contains('active')
-      && !document.getElementById('modalOverlay').classList.contains('open');
+  const bp = document.getElementById('baitap-page');
+  const dp = document.getElementById('dethi-page');
+  const modalOpen = document.getElementById('modalOverlay').classList.contains('open');
+  const onFunctional = (bp && bp.style.display === 'block') || (dp && dp.style.display === 'block');
+  return onFunctional && !modalOpen;
 }
 
 document.addEventListener('mousemove', e => {
