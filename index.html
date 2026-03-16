@@ -374,9 +374,10 @@ footer p{font-size:.78rem;color:var(--muted);}
 #baitap-page a,#baitap-page button{cursor:pointer;}
 /* Modal luôn dùng cursor bình thường dù ở trang nào */
 .modal-overlay,.modal,.modal *{cursor:auto !important;}
-.modal a,.modal button,.modal-overlay .mbtn,.float-bubble,.float-bubble *{cursor:pointer !important;}
+.modal a,.modal button,.modal-overlay .mbtn,.bubble-item,.bubble-item *{cursor:pointer !important;}
 #baitap-page.active{display:block;}
 #intro-page.hidden{display:none;}
+#dethi-page.hidden{display:none;}
 
 .bt-page-wrap{
   max-width:1280px;margin:0 auto;
@@ -502,39 +503,208 @@ footer p{font-size:.78rem;color:var(--muted);}
 .iframe-ph-icon{font-size:3rem;}
 
 /* ══════════════════════════════════════════
-   FLOATING BUBBLE
+   BUBBLE STACK (nhiều bài ẩn cùng lúc)
 ══════════════════════════════════════════ */
-.float-bubble{
+.bubble-stack{
   position:fixed;z-index:600;
-  bottom:28px;right:28px;
-  background:rgba(24,24,26,.95);
+  bottom:24px;right:24px;
+  display:flex;flex-direction:column-reverse;
+  align-items:flex-end;gap:8px;
+  pointer-events:none;
+}
+.bubble-item{
+  display:flex;align-items:center;gap:10px;
+  background:rgba(24,24,26,.96);
   backdrop-filter:blur(20px);
   border:1px solid rgba(245,59,87,.38);
   border-radius:100px;
-  padding:9px 16px 9px 10px;
-  display:flex;align-items:center;gap:10px;
-  box-shadow:0 10px 36px rgba(0,0,0,.5),0 0 0 1px rgba(245,59,87,.1);
-  cursor:none;
-  transition:transform .25s,box-shadow .25s,opacity .3s;
-  transform:translateY(80px)scale(.9);opacity:0;pointer-events:none;
+  padding:8px 14px 8px 10px;
+  box-shadow:0 8px 28px rgba(0,0,0,.5),0 0 0 1px rgba(245,59,87,.1);
+  cursor:pointer;
+  pointer-events:all;
+  transition:transform .25s,box-shadow .25s,opacity .3s,max-height .3s;
+  transform:translateX(120px);opacity:0;
+  max-height:60px;overflow:hidden;
 }
-.float-bubble.visible{transform:translateY(0)scale(1);opacity:1;pointer-events:all;}
-.float-bubble:hover{transform:translateY(-2px)scale(1.02);box-shadow:0 16px 44px rgba(0,0,0,.5),0 0 0 1px rgba(245,59,87,.28);}
-.bubble-ring{width:28px;height:28px;border-radius:50%;border:2px solid var(--red);display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;}
-.bubble-ring::before{content:'';position:absolute;inset:-5px;border-radius:50%;border:1.5px solid rgba(245,59,87,.28);animation:bpulse 2s ease infinite;}
-@keyframes bpulse{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.38);opacity:0}}
-.bubble-dot{width:8px;height:8px;border-radius:50%;background:var(--red);animation:blink 1.5s ease infinite;}
+.bubble-item.visible{transform:translateX(0);opacity:1;}
+.bubble-item:hover{transform:translateX(0) translateY(-2px) scale(1.02);box-shadow:0 14px 40px rgba(0,0,0,.5),0 0 0 1px rgba(245,59,87,.28);}
+.bubble-ring{width:26px;height:26px;border-radius:50%;border:2px solid var(--red);display:flex;align-items:center;justify-content:center;flex-shrink:0;position:relative;}
+.bubble-ring::before{content:'';position:absolute;inset:-5px;border-radius:50%;border:1.5px solid rgba(245,59,87,.25);animation:bpulse 2s ease infinite;}
+@keyframes bpulse{0%,100%{transform:scale(1);opacity:.55}50%{transform:scale(1.4);opacity:0}}
+.bubble-dot{width:7px;height:7px;border-radius:50%;background:var(--red);animation:blink 1.5s ease infinite;}
 .bubble-info{display:flex;flex-direction:column;}
-.bubble-name{font-size:.76rem;font-weight:700;color:#fff;}
-.bubble-hint{font-size:.67rem;color:var(--red2);}
+.bubble-name{font-size:.74rem;font-weight:700;color:#fff;max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.bubble-hint{font-size:.63rem;color:var(--red2);}
+.bubble-x{background:none;border:none;color:rgba(255,255,255,.3);font-size:.78rem;cursor:pointer;padding:2px 4px;border-radius:6px;line-height:1;font-family:'Be Vietnam Pro',sans-serif;transition:background .15s,color .15s;flex-shrink:0;}
+.bubble-x:hover{background:rgba(245,59,87,.2);color:var(--red2);}
+
+/* hidden iframes pool */
+.iframe-pool{display:none;}
+
 .modal-overlay,.modal,.modal *{cursor:auto;}
 .modal-btns .mbtn,.link-open{cursor:pointer;}
-.bubble-x{cursor:pointer;}
-.bubble-x:hover{background:rgba(245,59,87,.18);color:var(--red2);}
 
 /* ══════════════════════════════════════════
-   RESPONSIVE
+   ĐỀ THI'S PAGE
 ══════════════════════════════════════════ */
+#dethi-page{display:none;padding-top:66px;min-height:100vh;cursor:auto;}
+#dethi-page *{cursor:auto;}
+#dethi-page a,#dethi-page button{cursor:pointer;}
+#dethi-page.active{display:block;}
+
+/* ── File grid ── */
+.file-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
+  gap:16px;
+}
+.file-card{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:22px 18px 18px;
+  backdrop-filter:blur(14px);
+  cursor:pointer;
+  transition:transform .28s,border-color .28s,box-shadow .28s;
+  position:relative;overflow:hidden;
+  display:flex;flex-direction:column;gap:12px;
+}
+.file-card::before{
+  content:'';position:absolute;inset:0;border-radius:18px;
+  background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(245,59,87,.07),transparent 65%);
+  opacity:0;transition:opacity .3s;pointer-events:none;
+}
+.file-card:hover{transform:translateY(-4px);border-color:rgba(245,59,87,.35);box-shadow:0 16px 44px rgba(0,0,0,.28);}
+.file-card:hover::before{opacity:1;}
+
+.file-thumb{
+  width:100%;height:120px;
+  border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:3rem;
+  background:rgba(255,255,255,.04);
+  border:1px solid var(--border);
+  position:relative;overflow:hidden;
+  flex-shrink:0;
+}
+.file-thumb.pdf-bg{background:linear-gradient(135deg,rgba(239,68,68,.15),rgba(220,38,38,.08));}
+.file-thumb.word-bg{background:linear-gradient(135deg,rgba(59,130,246,.15),rgba(37,99,235,.08));}
+.file-thumb.other-bg{background:linear-gradient(135deg,rgba(107,114,128,.15),rgba(75,85,99,.08));}
+
+.file-name{
+  font-size:.88rem;font-weight:700;
+  line-height:1.35;
+  word-break:break-word;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+}
+.file-meta{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-top:auto;
+}
+.file-type-badge{
+  font-size:.65rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  padding:3px 9px;border-radius:100px;
+}
+.badge-pdf{background:rgba(239,68,68,.15);color:#f87171;border:1px solid rgba(239,68,68,.28);}
+.badge-word{background:rgba(59,130,246,.15);color:#60a5fa;border:1px solid rgba(59,130,246,.28);}
+.badge-other{background:rgba(107,114,128,.15);color:#9ca3af;border:1px solid rgba(107,114,128,.22);}
+.file-size{font-size:.68rem;color:var(--muted);}
+
+.file-actions{display:flex;gap:8px;}
+.file-btn{
+  flex:1;padding:8px 0;border-radius:10px;border:none;
+  font-family:'Be Vietnam Pro',sans-serif;font-size:.78rem;font-weight:700;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;
+  transition:transform .18s,box-shadow .18s,background .18s;
+}
+.file-btn-view{
+  background:linear-gradient(135deg,var(--red),var(--red2));color:#fff;
+  box-shadow:0 4px 14px rgba(245,59,87,.3);
+}
+.file-btn-view:hover{transform:translateY(-1px);box-shadow:0 7px 20px rgba(245,59,87,.45);}
+.file-btn-dl{
+  background:rgba(255,255,255,.07);color:#fff;
+  border:1px solid var(--border);
+  text-decoration:none;
+}
+.file-btn-dl:hover{background:rgba(255,255,255,.13);border-color:rgba(255,255,255,.22);}
+
+/* Empty state */
+.file-empty{
+  grid-column:1/-1;
+  text-align:center;padding:60px 20px;
+  color:var(--muted);
+}
+.file-empty-icon{font-size:3.5rem;margin-bottom:14px;}
+.file-empty h3{font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:800;color:#fff;margin-bottom:8px;}
+.file-empty p{font-size:.85rem;line-height:1.7;}
+.file-empty code{
+  background:rgba(255,255,255,.07);
+  border:1px solid var(--border);
+  border-radius:6px;padding:2px 8px;
+  font-size:.82rem;color:var(--red2);
+}
+
+/* ══════════════════════════════════════════
+   FILE PREVIEW MODAL
+══════════════════════════════════════════ */
+.fmodal-overlay{
+  position:fixed;inset:0;z-index:500;
+  background:rgba(0,0,0,.82);backdrop-filter:blur(10px);
+  display:flex;align-items:center;justify-content:center;
+  padding:20px;
+  opacity:0;pointer-events:none;transition:opacity .25s;
+}
+.fmodal-overlay.open{opacity:1;pointer-events:all;}
+.fmodal{
+  background:#1b1b1e;border:1px solid var(--border);
+  border-radius:22px;width:100%;max-width:960px;
+  max-height:94vh;display:flex;flex-direction:column;
+  overflow:hidden;
+  box-shadow:0 32px 80px rgba(0,0,0,.7);
+  transform:scale(.95)translateY(14px);transition:transform .25s;
+}
+.fmodal-overlay.open .fmodal{transform:scale(1)translateY(0);}
+.fmodal-header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:15px 20px;border-bottom:1px solid var(--border);
+  background:rgba(255,255,255,.025);flex-shrink:0;
+}
+.fmodal-left{display:flex;align-items:center;gap:11px;}
+.fmodal-icon{font-size:1.4rem;}
+.fmodal-title{font-family:'Syne',sans-serif;font-size:.98rem;font-weight:800;}
+.fmodal-sub{font-size:.7rem;color:var(--muted);margin-top:1px;}
+.fmodal-btns{display:flex;gap:7px;}
+.fmodal-body{flex:1;overflow-y:auto;padding:0;display:flex;flex-direction:column;}
+.fmodal-content{flex:1;display:flex;flex-direction:column;}
+
+/* PDF viewer */
+.fmodal-content iframe{
+  width:100%;border:none;display:block;
+  min-height:75vh;flex:1;
+}
+/* Word/other fallback */
+.fmodal-fallback{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:16px;padding:60px 30px;text-align:center;
+  color:var(--muted);min-height:60vh;
+}
+.fmodal-fallback-icon{font-size:4rem;}
+.fmodal-fallback h3{font-family:'Syne',sans-serif;font-size:1.15rem;font-weight:800;color:#fff;margin-bottom:6px;}
+.fmodal-fallback p{font-size:.85rem;line-height:1.7;max-width:420px;}
+
+/* Responsive */
+@media(max-width:768px){
+  .file-grid{grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;}
+  .file-thumb{height:90px;font-size:2.2rem;}
+  .file-name{font-size:.8rem;}
+  .fmodal-overlay{padding:0;}
+  .fmodal{border-radius:0;max-height:100dvh;max-width:100vw;}
+  .fmodal-header{padding:10px 12px;}
+  .fmodal-title{font-size:.86rem;}
+  .fmodal-sub{font-size:.64rem;}
+  .fmodal-content iframe{min-height:80vh;}
+}
 
 /* ── Hamburger (hidden on desktop) ── */
 .nav-hamburger{
@@ -673,12 +843,13 @@ footer p{font-size:.78rem;color:var(--muted);}
   footer .footer-inner{padding:16px;flex-direction:column;align-items:flex-start;gap:6px;}
   footer p{font-size:.72rem;}
 
-  /* Float bubble */
-  .float-bubble{right:10px;bottom:10px;padding:7px 11px 7px 9px;gap:8px;}
-  .bubble-name{font-size:.7rem;}
+  /* Float bubble stack */
+  .bubble-stack{right:10px;bottom:10px;gap:6px;}
+  .bubble-item{padding:7px 11px 7px 9px;gap:8px;}
+  .bubble-name{font-size:.7rem;max-width:120px;}
   .bubble-hint{font-size:.6rem;}
-  .bubble-ring{width:24px;height:24px;}
-  .bubble-dot{width:7px;height:7px;}
+  .bubble-ring{width:22px;height:22px;}
+  .bubble-dot{width:6px;height:6px;}
 }
 
 @media(max-width:420px){
@@ -729,6 +900,7 @@ footer p{font-size:.78rem;color:var(--muted);}
   <ul class="nav-links">
     <li><a href="#" onclick="showPage('intro');return false;" id="link-intro" class="active">Giới thiệu</a></li>
     <li><a href="#" onclick="showPage('baitap');return false;" id="link-baitap">Bài tập</a></li>
+    <li><a href="#" onclick="showPage('dethi');return false;" id="link-dethi">📁 Đề thi's</a></li>
     <li><a href="#" class="cta" onclick="showPage('baitap');return false;">Làm ngay →</a></li>
   </ul>
   <button class="nav-hamburger" id="hamburger" onclick="toggleMenu()" aria-label="Menu">
@@ -740,6 +912,7 @@ footer p{font-size:.78rem;color:var(--muted);}
 <div class="mobile-menu" id="mobileMenu">
   <a href="#" onclick="showPage('intro');closeMobileMenu();return false;" id="mlink-intro" class="active">🏠 Giới thiệu</a>
   <a href="#" onclick="showPage('baitap');closeMobileMenu();return false;" id="mlink-baitap">📚 Bài tập</a>
+  <a href="#" onclick="showPage('dethi');closeMobileMenu();return false;" id="mlink-dethi">📁 Đề thi's</a>
   <a href="#" class="cta" onclick="showPage('baitap');closeMobileMenu();return false;">Làm ngay →</a>
 </div>
 
@@ -878,6 +1051,47 @@ footer p{font-size:.78rem;color:var(--muted);}
 </div>
 
 <!-- ════════════════════════════════════════
+     ĐỀ THI'S PAGE
+════════════════════════════════════════ -->
+<div id="dethi-page">
+  <div class="bt-page-wrap">
+    <div class="bt-header">
+      <h2>📁 Đề thi's</h2>
+      <p>Tất cả file Word và PDF trong thư mục <code>hwfiles/</code> — bấm để xem trước hoặc tải xuống.</p>
+    </div>
+    <!-- File grid — render từ data-files.js -->
+    <div class="file-grid" id="fileGrid"></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     FILE PREVIEW MODAL
+════════════════════════════════════════ -->
+<div class="fmodal-overlay" id="fmodalOverlay">
+  <div class="fmodal">
+    <div class="fmodal-header">
+      <div class="fmodal-left">
+        <span class="fmodal-icon" id="fmodalIcon">📄</span>
+        <div>
+          <div class="fmodal-title" id="fmodalTitle">Tài liệu</div>
+          <div class="fmodal-sub" id="fmodalSub"></div>
+        </div>
+      </div>
+      <div class="fmodal-btns">
+        <a class="mbtn mbtn-fs" id="fmodalDl" href="#" download target="_blank">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Tải xuống
+        </a>
+        <button class="mbtn mbtn-close" onclick="closeFModal()">✕ Đóng</button>
+      </div>
+    </div>
+    <div class="fmodal-body">
+      <div id="fmodalContent" class="fmodal-content"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
      MODAL
 ════════════════════════════════════════ -->
 <div class="modal-overlay" id="modalOverlay">
@@ -909,48 +1123,43 @@ footer p{font-size:.78rem;color:var(--muted);}
           <div class="iframe-ph-icon">🔗</div>
           <div>Đang tải bài tập…</div>
         </div>
-        <iframe id="modalIframe" src="" title="Bài tập"
-          frameborder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowfullscreen
-          onload="onLoad()"
-          onerror="onErr()">
-        </iframe>
+        <!-- iframe được inject động bởi JS -->
       </div>
     </div>
   </div>
 </div>
 
-<!-- ════════════════════════════════════════
-     FLOATING BUBBLE
-════════════════════════════════════════ -->
-<div class="float-bubble" id="floatBubble" onclick="resumeModal()">
-  <div class="bubble-ring"><div class="bubble-dot"></div></div>
-  <div class="bubble-info">
-    <span class="bubble-name" id="bubbleName">Đang làm bài</span>
-    <span class="bubble-hint">Nhấn để quay lại →</span>
-  </div>
-  <button class="bubble-x" onclick="event.stopPropagation();closeModal()">✕</button>
-</div>
+<!-- Bubble stack (nhiều bài ẩn cùng lúc) -->
+<div class="bubble-stack" id="bubbleStack"></div>
+
+<!-- Hidden iframe pool (giữ trạng thái bài đang làm) -->
+<div class="iframe-pool" id="iframePool"></div>
 
 <script src="assignments.js"></script>
 <!-- Dữ liệu bài tập — chỉnh file này để thêm/sửa bài -->
 <script src="data-baitap.js"></script>
+<!-- Danh sách file đề thi — chỉnh file này để thêm/xoá file -->
+<script src="data-files.js"></script>
 
 <script>
 // ─── PAGE SWITCH ───────────────────────────
+const PAGES = ['intro','baitap','dethi'];
 function showPage(p) {
-  document.getElementById('intro-page').classList.toggle('hidden', p !== 'intro');
-  document.getElementById('baitap-page').classList.toggle('active', p === 'baitap');
-  document.getElementById('link-intro').classList.toggle('active', p === 'intro');
-  document.getElementById('link-baitap').classList.toggle('active', p === 'baitap');
-  // sync mobile menu active states
-  const mi = document.getElementById('mlink-intro');
-  const mb = document.getElementById('mlink-baitap');
-  if (mi) mi.classList.toggle('active', p === 'intro');
-  if (mb) mb.classList.toggle('active', p === 'baitap');
+  PAGES.forEach(id => {
+    const el = document.getElementById(id+'-page');
+    if (el) el.classList.toggle('hidden', id !== p);
+    if (id === 'baitap') el?.classList.toggle('active', id === p);
+    if (id === 'dethi')  el?.classList.toggle('active', id === p);
+    // desktop links
+    const lnk = document.getElementById('link-'+id);
+    if (lnk) lnk.classList.toggle('active', id === p);
+    // mobile links
+    const mlnk = document.getElementById('mlink-'+id);
+    if (mlnk) mlnk.classList.toggle('active', id === p);
+  });
   window.scrollTo({top:0, behavior:'smooth'});
   if (p === 'baitap') setTimeout(revealCards, 80);
+  if (p === 'dethi')  setTimeout(buildFileGrid, 80);
 }
 
 // ─── MOBILE MENU ──────────────────────────
@@ -1045,92 +1254,322 @@ function buildCards() {
 }
 buildCards();
 
-// ─── MODAL ────────────────────────────────
-let curUrl = '';
-let curCardUrl = '';   // url của bài đang bị ẩn (bubble đang hiện)
+// ══════════════════════════════════════════════
+//  ĐỀ THI'S — FILE GRID
+// ══════════════════════════════════════════════
+let fileGridBuilt = false;
 
-function openModal(btn) {
-  const targetUrl = btn.dataset.url;
+function buildFileGrid() {
+  const grid = document.getElementById('fileGrid');
+  if (!grid) return;
+  if (fileGridBuilt) return; // chỉ build 1 lần
 
-  // Nếu bài này đang bị ẩn (bubble hiện) → resume lại, không load lại
-  if (document.getElementById('floatBubble').classList.contains('visible') && curCardUrl === targetUrl) {
-    resumeModal();
+  if (typeof HW_FILES === 'undefined' || HW_FILES.length === 0) {
+    grid.innerHTML = `
+      <div class="file-empty">
+        <div class="file-empty-icon">📂</div>
+        <h3>Chưa có file nào</h3>
+        <p>Bỏ file Word hoặc PDF vào thư mục <code>hwfiles/</code>,<br>
+           rồi thêm vào <code>data-files.js</code> là xong!</p>
+      </div>`;
     return;
   }
 
-  // Nếu có bài KHÁC đang ẩn → hỏi xác nhận trước khi bỏ
-  if (document.getElementById('floatBubble').classList.contains('visible') && curCardUrl !== targetUrl) {
-    if (!confirm('Bạn đang làm bài khác chưa thoát.\nBấm OK để thoát và mở bài mới, Cancel để quay lại bài cũ.')) {
-      resumeModal();
-      return;
-    }
+  grid.innerHTML = '';
+  HW_FILES.forEach(f => {
+    const ext  = f.file.split('.').pop().toLowerCase();
+    const isPdf  = ext === 'pdf';
+    const isWord = ['doc','docx'].includes(ext);
+    const icon   = isPdf ? '📕' : isWord ? '📘' : '📄';
+    const thumbCls = isPdf ? 'pdf-bg' : isWord ? 'word-bg' : 'other-bg';
+    const badgeCls = isPdf ? 'badge-pdf' : isWord ? 'badge-word' : 'badge-other';
+    const badgeTxt = isPdf ? 'PDF' : isWord ? 'Word' : ext.toUpperCase();
+    const path = 'hwfiles/' + f.file;
+
+    const card = document.createElement('div');
+    card.className = 'file-card';
+    card.innerHTML = `
+      <div class="file-thumb ${thumbCls}">${icon}</div>
+      <div class="file-name">${f.name || f.file}</div>
+      <div class="file-meta">
+        <span class="file-type-badge ${badgeCls}">${badgeTxt}</span>
+        ${f.size ? `<span class="file-size">${f.size}</span>` : ''}
+      </div>
+      <div class="file-actions">
+        <button class="file-btn file-btn-view" onclick="openFModal('${path}','${(f.name||f.file).replace(/'/g,'\\'')}','${icon}','${ext}')">
+          👁️ Xem
+        </button>
+        <a class="file-btn file-btn-dl" href="${path}" download="${f.file}" target="_blank">
+          ⬇️ Tải
+        </a>
+      </div>`;
+
+    card.addEventListener('mousemove', e => {
+      const r = card.getBoundingClientRect();
+      card.style.setProperty('--mx', ((e.clientX-r.left)/r.width*100)+'%');
+      card.style.setProperty('--my', ((e.clientY-r.top)/r.height*100)+'%');
+    });
+    // click card body (not buttons) → preview
+    card.addEventListener('click', e => {
+      if (!e.target.closest('.file-actions')) {
+        openFModal(path, f.name||f.file, icon, ext);
+      }
+    });
+
+    grid.appendChild(card);
+  });
+
+  fileGridBuilt = true;
+
+  // fade-in
+  requestAnimationFrame(() => {
+    grid.querySelectorAll('.file-card').forEach((el, i) => {
+      el.style.opacity = '0'; el.style.transform = 'translateY(20px)';
+      el.style.transition = `opacity .4s ${i*0.06}s ease, transform .4s ${i*0.06}s ease`;
+      requestAnimationFrame(() => { el.style.opacity='1'; el.style.transform='translateY(0)'; });
+    });
+  });
+}
+
+// ── File Preview Modal ──────────────────────
+function openFModal(path, name, icon, ext) {
+  document.getElementById('fmodalTitle').textContent = name;
+  document.getElementById('fmodalIcon').textContent  = icon;
+  document.getElementById('fmodalSub').textContent   = path;
+  const dlBtn = document.getElementById('fmodalDl');
+  dlBtn.href = path; dlBtn.setAttribute('download', name);
+
+  const content = document.getElementById('fmodalContent');
+  const isPdf  = ext === 'pdf';
+  const isWord = ['doc','docx'].includes(ext);
+
+  if (isPdf) {
+    // PDF → nhúng trực tiếp bằng <iframe>
+    content.innerHTML = `<iframe src="${path}" title="${name}"></iframe>`;
+  } else if (isWord) {
+    // Word → dùng Google Docs Viewer (cần web server / đường dẫn tuyệt đối)
+    const abs = location.origin + location.pathname.replace(/\/[^/]*$/, '/') + path;
+    content.innerHTML = `
+      <iframe src="https://docs.google.com/gview?url=${encodeURIComponent(abs)}&embedded=true" title="${name}"></iframe>`;
+  } else {
+    content.innerHTML = `
+      <div class="fmodal-fallback">
+        <div class="fmodal-fallback-icon">${icon}</div>
+        <h3>Không thể xem trước loại file này</h3>
+        <p>Định dạng <strong>.${ext}</strong> chưa hỗ trợ xem trực tiếp.<br>
+           Hãy dùng nút <strong>Tải xuống</strong> để mở bằng ứng dụng phù hợp.</p>
+      </div>`;
   }
 
-  curUrl = targetUrl;
-  curCardUrl = targetUrl;
+  document.getElementById('fmodalOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
 
-  const title = btn.dataset.title;
-  const iframeTitle = btn.dataset.iframeTitle || title;
+function closeFModal() {
+  document.getElementById('fmodalOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+  setTimeout(() => { document.getElementById('fmodalContent').innerHTML = ''; }, 280);
+}
 
-  document.getElementById('modalTitle').textContent = title;
-  document.getElementById('modalIcon').textContent  = btn.dataset.subject;
-  document.getElementById('modalSub').textContent   = curUrl;
-  document.getElementById('modalUrl').textContent   = curUrl;
-  document.getElementById('bubbleName').textContent = title;
+document.getElementById('fmodalOverlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('fmodalOverlay')) closeFModal();
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && document.getElementById('fmodalOverlay').classList.contains('open')) closeFModal();
+});
 
+// ══════════════════════════════════════════════
+//  MULTI-SESSION MODAL SYSTEM
+//  - Nhiều bài có thể ẩn cùng lúc
+//  - Mỗi bài có iframe riêng giữ trạng thái
+//  - Bubble stack hiện tất cả bài đang ẩn
+// ══════════════════════════════════════════════
+
+// sessions: Map<url, { title, subject, iframeEl, bubbleEl, loaded }>
+const sessions = new Map();
+let activeUrl = null;   // bài đang hiện trong modal
+
+// ─── MỞ BÀI TẬP ──────────────────────────────
+function openModal(btn) {
+  const url    = btn.dataset.url;
+  const title  = btn.dataset.title;
+  const ititle = btn.dataset.iframeTitle || title;
+  const subj   = btn.dataset.subject || '📄';
+
+  // Nếu bài này đang ẩn → resume lại, không tạo mới
+  if (sessions.has(url)) {
+    showSession(url);
+    return;
+  }
+
+  // Tạo session mới
+  createSession(url, title, ititle, subj);
+  showSession(url);
+}
+
+// ─── TẠO SESSION MỚI ─────────────────────────
+function createSession(url, title, ititle, subj) {
+  // Tạo iframe ẩn giữ trạng thái
+  const iframe = document.createElement('iframe');
+  iframe.src    = url;
+  iframe.title  = ititle;
+  iframe.setAttribute('frameborder', '0');
+  iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
+  iframe.setAttribute('allowfullscreen', '');
+  iframe.style.cssText = 'width:100%;height:900px;border:none;display:block;opacity:0;transition:opacity .3s;';
+  iframe.addEventListener('load', () => {
+    iframe.style.opacity = '1';
+    const s = sessions.get(url);
+    if (s) {
+      s.loaded = true;
+      // Ẩn placeholder nếu đây là bài đang active
+      if (activeUrl === url) {
+        document.getElementById('iframePh').style.display = 'none';
+      }
+    }
+  });
+  document.getElementById('iframePool').appendChild(iframe);
+
+  sessions.set(url, { title, subj, iframeEl: iframe, bubbleEl: null, loaded: false });
+}
+
+// ─── HIỆN BÀI TRONG MODAL ─────────────────────
+function showSession(url) {
+  const s = sessions.get(url);
+  if (!s) return;
+
+  activeUrl = url;
+
+  // Cập nhật header modal
+  document.getElementById('modalTitle').textContent = s.title;
+  document.getElementById('modalIcon').textContent  = s.subj;
+  document.getElementById('modalSub').textContent   = url;
+  document.getElementById('modalUrl').textContent   = url;
+
+  // Swap iframe vào modal
+  const wrap = document.getElementById('iframeWrap');
+  // Detach any current iframe from modal (trả về pool)
+  const cur = wrap.querySelector('iframe');
+  if (cur) document.getElementById('iframePool').appendChild(cur);
+
+  // Ẩn/hiện placeholder
   const ph = document.getElementById('iframePh');
-  ph.style.display = 'flex';
-  ph.innerHTML = '<div class="iframe-ph-icon">🔗</div><div>Đang tải bài tập…</div>';
+  if (s.loaded) {
+    ph.style.display = 'none';
+    s.iframeEl.style.opacity = '1';
+  } else {
+    ph.style.display = 'flex';
+    ph.innerHTML = '<div class="iframe-ph-icon">🔗</div><div>Đang tải bài tập…</div>';
+  }
 
-  const iframe = document.getElementById('modalIframe');
-  iframe.style.opacity = '0';
-  iframe.title = iframeTitle;
-  iframe.src = curUrl;
+  wrap.appendChild(s.iframeEl);
+
+  // Ẩn bubble của bài này nếu có
+  if (s.bubbleEl) {
+    s.bubbleEl.classList.remove('visible');
+    setTimeout(() => s.bubbleEl?.remove(), 300);
+    s.bubbleEl = null;
+  }
 
   document.getElementById('modalOverlay').classList.add('open');
-  document.getElementById('floatBubble').classList.remove('visible');
   document.body.style.overflow = 'hidden';
 }
-function onLoad() {
-  document.getElementById('iframePh').style.display = 'none';
-  const f = document.getElementById('modalIframe');
-  f.style.transition = 'opacity .3s'; f.style.opacity = '1';
-}
-function onErr() {
-  document.getElementById('iframePh').innerHTML =
-    `<div class="iframe-ph-icon">⚠️</div>
-     <div style="margin-bottom:10px">Trang không cho phép nhúng trực tiếp.</div>
-     <button class="link-open" onclick="openExternal()">↗ Mở trong tab mới</button>`;
-}
+
+// ─── ẨN BÀI (bubble) ──────────────────────────
 function hideModal() {
+  if (!activeUrl) return;
+  const s = sessions.get(activeUrl);
+  if (!s) return;
+
+  // Trả iframe về pool
+  const wrap = document.getElementById('iframeWrap');
+  const iframe = wrap.querySelector('iframe');
+  if (iframe) document.getElementById('iframePool').appendChild(iframe);
+
+  // Tạo bubble
+  const bubble = createBubble(activeUrl, s.title, s.subj);
+  s.bubbleEl = bubble;
+
   document.getElementById('modalOverlay').classList.remove('open');
-  document.getElementById('floatBubble').classList.add('visible');
   document.body.style.overflow = '';
+  activeUrl = null;
 }
-function resumeModal() {
-  document.getElementById('modalOverlay').classList.add('open');
-  document.getElementById('floatBubble').classList.remove('visible');
-  document.body.style.overflow = 'hidden';
+
+// ─── TẠO BUBBLE ───────────────────────────────
+function createBubble(url, title, subj) {
+  const el = document.createElement('div');
+  el.className = 'bubble-item';
+  el.innerHTML = `
+    <div class="bubble-ring"><div class="bubble-dot"></div></div>
+    <div class="bubble-info">
+      <span class="bubble-name">${subj} ${title}</span>
+      <span class="bubble-hint">Nhấn để tiếp tục →</span>
+    </div>
+    <button class="bubble-x" title="Đóng bài này">✕</button>`;
+
+  el.addEventListener('click', () => showSession(url));
+  el.querySelector('.bubble-x').addEventListener('click', e => {
+    e.stopPropagation();
+    closeSession(url);
+  });
+
+  document.getElementById('bubbleStack').appendChild(el);
+  requestAnimationFrame(() => el.classList.add('visible'));
+  return el;
 }
-function closeModal() {
-  if (document.fullscreenElement) document.exitFullscreen().catch(()=>{});
-  document.getElementById('modalOverlay').classList.remove('open');
-  document.getElementById('floatBubble').classList.remove('visible');
-  document.body.style.overflow = '';
-  curCardUrl = '';  // reset guard
-  setTimeout(() => {
-    document.getElementById('modalIframe').src = '';
+
+// ─── ĐÓNG HOÀN TOÀN BÀI ──────────────────────
+function closeSession(url) {
+  const s = sessions.get(url);
+  if (!s) return;
+
+  // Nếu đang hiện trong modal thì đóng modal
+  if (activeUrl === url) {
+    if (document.fullscreenElement) document.exitFullscreen().catch(()=>{});
+    // Trả iframe về pool trước khi xoá
+    const wrap = document.getElementById('iframeWrap');
+    const iframe = wrap.querySelector('iframe');
+    if (iframe) document.getElementById('iframePool').appendChild(iframe);
+    document.getElementById('modalOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+    activeUrl = null;
+    // Reset placeholder
     const ph = document.getElementById('iframePh');
     ph.style.display = 'flex';
     ph.innerHTML = '<div class="iframe-ph-icon">🔗</div><div>Đang tải bài tập…</div>';
-  }, 280);
+  }
+
+  // Xoá bubble
+  if (s.bubbleEl) {
+    s.bubbleEl.classList.remove('visible');
+    setTimeout(() => s.bubbleEl?.remove(), 300);
+  }
+
+  // Xoá iframe khỏi pool
+  s.iframeEl.src = '';
+  s.iframeEl.remove();
+
+  sessions.delete(url);
 }
-function openExternal() { if (curUrl) window.open(curUrl,'_blank'); }
+
+// ─── ĐÓNG BÀI ĐANG MỞ TRONG MODAL ───────────
+function closeModal() {
+  if (activeUrl) closeSession(activeUrl);
+}
+
+// Wrapper cho nút Đóng trong modal
+function resumeModal() {} // không dùng nữa nhưng giữ tránh lỗi
+
+function openExternal() {
+  if (activeUrl) window.open(activeUrl, '_blank');
+}
+
+// Click vào overlay → ẩn (không đóng)
 document.getElementById('modalOverlay').addEventListener('click', e => {
-  if (e.target===document.getElementById('modalOverlay')) hideModal();
+  if (e.target === document.getElementById('modalOverlay')) hideModal();
 });
 document.addEventListener('keydown', e => {
-  if (e.key==='Escape' && document.getElementById('modalOverlay').classList.contains('open')) hideModal();
+  if (e.key === 'Escape' && document.getElementById('modalOverlay').classList.contains('open')) hideModal();
 });
 
 // ─── NAVBAR SCROLL ────────────────────────
@@ -1224,29 +1663,25 @@ function toggleFullscreen() {
   const btn   = document.getElementById('btnFullscreen');
   if (!document.fullscreenElement) {
     modal.requestFullscreen().then(() => {
-      btn.textContent = '⛶';
-      btn.title = 'Thoát toàn màn hình';
       modal.style.borderRadius = '0';
       modal.style.maxHeight = '100vh';
       modal.style.maxWidth = '100vw';
     }).catch(() => {});
   } else {
-    document.exitFullscreen().then(() => {
-      btn.textContent = '⛶';
-      btn.title = 'Toàn màn hình';
-      modal.style.borderRadius = '';
-      modal.style.maxHeight = '';
-      modal.style.maxWidth = '';
-    }).catch(() => {});
+    document.exitFullscreen().catch(() => {});
   }
 }
 document.addEventListener('fullscreenchange', () => {
   const btn = document.getElementById('btnFullscreen');
   if (!btn) return;
+  const modal = document.querySelector('.modal');
   if (document.fullscreenElement) {
     btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg> Thu nhỏ`;
   } else {
     btn.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg> Toàn màn hình`;
+    modal.style.borderRadius = '';
+    modal.style.maxHeight = '';
+    modal.style.maxWidth = '';
   }
 });
 </script>
