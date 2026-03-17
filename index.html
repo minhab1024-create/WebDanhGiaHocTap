@@ -653,6 +653,8 @@ footer p{font-size:.78rem;color:var(--muted);}
   opacity:0;pointer-events:none;transition:opacity .25s;
 }
 .fmodal-overlay.open{opacity:1;pointer-events:all;}
+.fmodal-overlay,.fmodal,.fmodal *{cursor:auto;}
+.fmodal a,.fmodal button,.fmodal-btns .mbtn{cursor:pointer;}
 .fmodal{
   background:#1b1b1e;border:1px solid var(--border);
   border-radius:22px;width:100%;max-width:960px;
@@ -1444,11 +1446,16 @@ function openFModal(path, name, icon, ext) {
 
   document.getElementById('fmodalOverlay').classList.add('open');
   document.body.style.overflow = 'hidden';
+  // Bật lại cursor khi xem file (body đang cursor:none)
+  document.body.style.cursor = 'auto';
+  document.getElementById('dot').style.opacity  = '0';
+  document.getElementById('ring').style.opacity = '0';
 }
 
 function closeFModal() {
   document.getElementById('fmodalOverlay').classList.remove('open');
   document.body.style.overflow = '';
+  document.body.style.cursor = '';   // trả về cursor:none của CSS
   setTimeout(() => { document.getElementById('fmodalContent').innerHTML = ''; }, 280);
 }
 
@@ -1665,9 +1672,11 @@ let mx=0,my=0,rx=0,ry=0;
 function isOnBaitap() {
   const bp = document.getElementById('baitap-page');
   const dp = document.getElementById('dethi-page');
-  const modalOpen = document.getElementById('modalOverlay').classList.contains('open');
+  const modalOpen  = document.getElementById('modalOverlay').classList.contains('open');
+  const fmodalOpen = document.getElementById('fmodalOverlay').classList.contains('open');
   const onFunctional = (bp && bp.style.display === 'block') || (dp && dp.style.display === 'block');
-  return onFunctional && !modalOpen;
+  // Ẩn cursor khi ở trang bài tập/đề thi — nhưng BẬT lại khi modal đang mở
+  return onFunctional && !modalOpen && !fmodalOpen;
 }
 
 document.addEventListener('mousemove', e => {
