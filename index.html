@@ -1166,6 +1166,7 @@ function showPage(p) {
   window.scrollTo({top:0, behavior:'smooth'});
   if (p === 'baitap') setTimeout(revealCards, 80);
   if (p === 'dethi')  setTimeout(buildFileGrid, 80);
+  setTimeout(updateCursor, 50);
 }
 
 // ─── MOBILE MENU ──────────────────────────
@@ -1446,17 +1447,14 @@ function openFModal(path, name, icon, ext) {
 
   document.getElementById('fmodalOverlay').classList.add('open');
   document.body.style.overflow = 'hidden';
-  // Bật lại cursor khi xem file (body đang cursor:none)
-  document.body.style.cursor = 'auto';
-  document.getElementById('dot').style.opacity  = '0';
-  document.getElementById('ring').style.opacity = '0';
+  updateCursor();
 }
 
 function closeFModal() {
   document.getElementById('fmodalOverlay').classList.remove('open');
   document.body.style.overflow = '';
-  document.body.style.cursor = '';   // trả về cursor:none của CSS
   setTimeout(() => { document.getElementById('fmodalContent').innerHTML = ''; }, 280);
+  updateCursor();
 }
 
 document.getElementById('fmodalOverlay').addEventListener('click', e => {
@@ -1669,24 +1667,41 @@ window.addEventListener('scroll',()=>{
 const dot=document.getElementById('dot'), ring=document.getElementById('ring');
 let mx=0,my=0,rx=0,ry=0;
 
+let fModalOpen = false;   // flag đơn giản, không phụ thuộc DOM class
+
+// ─── CURSOR MANAGER ───────────────────────
+// Một hàm duy nhất quyết định cursor ở đâu
+function updateCursor() {
+  const bp = document.getElementById('baitap-page');
+  const dp = document.getElementById('dethi-page');
+  const baitapModalOpen = document.getElementById('modalOverlay').classList.contains('open');
+  const fmodalOpen      = document.getElementById('fmodalOverlay').classList.contains('open');
+
+  const onFunctionalPage = (bp && bp.style.display === 'block')
+                        || (dp && dp.style.display === 'block');
+
+  // Custom cursor chỉ bật khi: trang giới thiệu, HOẶC một trong 2 modal đang mở
+  const useCustom = !onFunctionalPage || baitapModalOpen || fmodalOpen;
+
+  dot.style.opacity  = useCustom ? '1' : '0';
+  ring.style.opacity = useCustom ? '1' : '0';
+  document.body.style.cursor = useCustom ? 'none' : 'auto';
+}
+
 function isOnBaitap() {
   const bp = document.getElementById('baitap-page');
   const dp = document.getElementById('dethi-page');
-  const modalOpen  = document.getElementById('modalOverlay').classList.contains('open');
-  const fmodalOpen = document.getElementById('fmodalOverlay').classList.contains('open');
+  const baitapModalOpen = document.getElementById('modalOverlay').classList.contains('open');
+  const fmodalOpen      = document.getElementById('fmodalOverlay').classList.contains('open');
   const onFunctional = (bp && bp.style.display === 'block') || (dp && dp.style.display === 'block');
-  // Ẩn cursor khi ở trang bài tập/đề thi — nhưng BẬT lại khi modal đang mở
-  return onFunctional && !modalOpen && !fmodalOpen;
+  return onFunctional && !baitapModalOpen && !fmodalOpen;
 }
 
 document.addEventListener('mousemove', e => {
   mx = e.clientX; my = e.clientY;
-  if (isOnBaitap()) {
-    dot.style.opacity = '0'; ring.style.opacity = '0';
-    return;
+  if (!isOnBaitap()) {
+    dot.style.left = mx+'px'; dot.style.top = my+'px';
   }
-  dot.style.opacity = '1'; ring.style.opacity = '1';
-  dot.style.left = mx+'px'; dot.style.top = my+'px';
 });
 
 (function loop() {
@@ -1700,18 +1715,20 @@ document.addEventListener('mousemove', e => {
 document.addEventListener('mouseover', e => {
   if (isOnBaitap()) return;
   const b = e.target.closest('a,button');
-  ring.style.width  = b?'48px':'34px';
-  ring.style.height = b?'48px':'34px';
-  ring.style.borderColor = b?'rgba(245,59,87,.9)':'rgba(245,59,87,.5)';
+  ring.style.width       = b ? '48px' : '34px';
+  ring.style.height      = b ? '48px' : '34px';
+  ring.style.borderColor = b ? 'rgba(245,59,87,.9)' : 'rgba(245,59,87,.5)';
 });
 
 // ─── HOVER GLOW ───────────────────────────
-const glow=document.getElementById('hoverGlow');
+const glow = document.getElementById('hoverGlow');
 document.addEventListener('mousemove', e => {
-  if (isOnBaitap()) { glow.style.opacity='0'; return; }
-  glow.style.left=e.clientX+'px'; glow.style.top=e.clientY+'px'; glow.style.opacity='1';
+  if (isOnBaitap()) { glow.style.opacity = '0'; return; }
+  glow.style.left    = e.clientX + 'px';
+  glow.style.top     = e.clientY + 'px';
+  glow.style.opacity = '1';
 });
-document.addEventListener('mouseleave',()=>{ glow.style.opacity='0'; });
+document.addEventListener('mouseleave', () => { glow.style.opacity = '0'; });
 
 // ─── SCROLL REVEAL ────────────────────────
 const io = new IntersectionObserver(entries => {
