@@ -43,6 +43,12 @@ const HW_FILES = [
     name: "Đề cương ôn tập địa lý 11 Giữa kỳ",
     size: "",
   },
+{
+    file: "lichsu.docx",
+    name: "Đề cương ôn tập lịch sử 11 Giữa kỳ",
+    size: "",
+  },
+
 
 
   
