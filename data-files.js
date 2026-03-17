@@ -22,26 +22,22 @@ const HW_FILES = [
   // ────────────────────────────────────────────────────────────
 
   {
-    file: "vl.pdf",
-    name: "Đề cương ôn tập Vật Lý 11 - HK2",
+    file: "vatly.docx",
+    name: "Đề cương ôn tập Vật Lý 11 Giữa kỳ",
     size: "",
   },
 
-   {
-    file: "sh.docx",
-     name: "Sinh học",
-    size: "450 KB",
-   },
+  // {
+  //   file: "bai-tap-toan-chuong3.docx",
+  //   name: "Bài tập Toán chương 3",
+  //   size: "450 KB",
+  // },
 
-  {
-     file: "ls.docx",
-     name: "Sinh học",
-    size: "800 KB",
-  },
+  // {
+  //   file: "de-thi-hoa-hk2.pdf",
+  //   name: "Đề thi Hóa học HK2",
+  //   size: "800 KB",
+  // },
 
   // ── THÊM FILE MỚI Ở ĐÂY ↑ ──────────────────────────────────
-];
-───────────────────────────
-];
-────
 ];

@@ -1342,27 +1342,103 @@ function openFModal(path, name, icon, ext) {
   document.getElementById('fmodalIcon').textContent  = icon;
   document.getElementById('fmodalSub').textContent   = path;
   const dlBtn = document.getElementById('fmodalDl');
-  dlBtn.href = path; dlBtn.setAttribute('download', name);
+  dlBtn.href = path;
+  dlBtn.setAttribute('download', name);
 
   const content = document.getElementById('fmodalContent');
   const isPdf  = ext === 'pdf';
   const isWord = ['doc','docx'].includes(ext);
 
   if (isPdf) {
-    // PDF → nhúng trực tiếp bằng <iframe>
-    content.innerHTML = `<iframe src="${path}" title="${name}"></iframe>`;
-  } else if (isWord) {
-    // Word → dùng Google Docs Viewer (cần web server / đường dẫn tuyệt đối)
-    const abs = location.origin + location.pathname.replace(/\/[^/]*$/, '/') + path;
+    // PDF — nhúng trực tiếp, thêm #toolbar=1 cho Chrome
     content.innerHTML = `
-      <iframe src="https://docs.google.com/gview?url=${encodeURIComponent(abs)}&embedded=true" title="${name}"></iframe>`;
+      <iframe src="${path}#toolbar=1&view=FitH"
+        title="${name}" style="width:100%;min-height:78vh;border:none;display:block;flex:1;">
+      </iframe>`;
+
+  } else if (isWord) {
+    // Word — đọc bằng mammoth.js, render HTML ngay trong trang
+    content.innerHTML = `
+      <div id="wordLoadingMsg" style="display:flex;flex-direction:column;align-items:center;
+        justify-content:center;gap:14px;min-height:60vh;color:var(--muted);text-align:center;padding:30px;">
+        <div style="font-size:3rem;">📘</div>
+        <div style="font-size:.9rem;">Đang đọc file Word…</div>
+        <div style="width:40px;height:3px;border-radius:2px;background:rgba(245,59,87,.25);overflow:hidden;">
+          <div style="height:100%;background:var(--red);animation:wload 1.2s ease-in-out infinite;border-radius:2px;"></div>
+        </div>
+      </div>
+      <style>@keyframes wload{0%{width:0;margin-left:0}50%{width:100%;margin-left:0}100%{width:0;margin-left:100%}}</style>
+      <div id="wordContent" style="display:none;padding:32px 40px;line-height:1.8;font-size:.95rem;
+        color:#e8e8e8;max-width:820px;margin:0 auto;"></div>`;
+
+    // Load mammoth.js nếu chưa có
+    function renderDocx(arrayBuffer) {
+      if (typeof mammoth === 'undefined') {
+        document.getElementById('wordLoadingMsg').innerHTML = `
+          <div style="font-size:2rem;">⚠️</div>
+          <div>Cần kết nối internet để đọc file Word lần đầu.</div>`;
+        return;
+      }
+      mammoth.convertToHtml({ arrayBuffer })
+        .then(result => {
+          const wc = document.getElementById('wordContent');
+          const wl = document.getElementById('wordLoadingMsg');
+          if (!wc) return;
+          wc.innerHTML = result.value || '<p style="color:var(--muted)">File trống hoặc không đọc được.</p>';
+          // Style Word content
+          wc.querySelectorAll('h1,h2,h3').forEach(h => {
+            h.style.cssText = 'font-family:Syne,sans-serif;font-weight:800;margin:1.2em 0 .5em;color:#fff;';
+          });
+          wc.querySelectorAll('p').forEach(p => { p.style.marginBottom = '.8em'; });
+          wc.querySelectorAll('table').forEach(t => {
+            t.style.cssText = 'width:100%;border-collapse:collapse;margin:1em 0;font-size:.88rem;';
+            t.querySelectorAll('td,th').forEach(cell => {
+              cell.style.cssText = 'border:1px solid rgba(255,255,255,.15);padding:8px 12px;';
+            });
+          });
+          if (wl) wl.style.display = 'none';
+          wc.style.display = 'block';
+        })
+        .catch(() => {
+          const wl = document.getElementById('wordLoadingMsg');
+          if (wl) wl.innerHTML = `<div style="font-size:2rem;">⚠️</div><div>Không đọc được file này.</div>`;
+        });
+    }
+
+    function loadMammothAndRender(arrayBuffer) {
+      if (typeof mammoth !== 'undefined') { renderDocx(arrayBuffer); return; }
+      const s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js';
+      s.onload  = () => renderDocx(arrayBuffer);
+      s.onerror = () => {
+        const wl = document.getElementById('wordLoadingMsg');
+        if (wl) wl.innerHTML = `<div style="font-size:2rem;">⚠️</div><div>Không tải được thư viện đọc Word.<br>Vui lòng kiểm tra internet.</div>`;
+      };
+      document.head.appendChild(s);
+    }
+
+    fetch(path)
+      .then(r => {
+        if (!r.ok) throw new Error('fetch failed');
+        return r.arrayBuffer();
+      })
+      .then(buf => loadMammothAndRender(buf))
+      .catch(() => {
+        const wl = document.getElementById('wordLoadingMsg');
+        if (wl) wl.innerHTML = `
+          <div style="font-size:2rem;">⚠️</div>
+          <div style="margin-bottom:12px;">Không đọc được file.<br>
+            <span style="font-size:.8rem;">Cần mở qua web server (không dùng file://)</span></div>
+          <a href="${path}" download="${name}" class="link-open" style="margin-top:4px;">⬇️ Tải xuống thay thế</a>`;
+      });
+
   } else {
     content.innerHTML = `
       <div class="fmodal-fallback">
         <div class="fmodal-fallback-icon">${icon}</div>
         <h3>Không thể xem trước loại file này</h3>
         <p>Định dạng <strong>.${ext}</strong> chưa hỗ trợ xem trực tiếp.<br>
-           Hãy dùng nút <strong>Tải xuống</strong> để mở bằng ứng dụng phù hợp.</p>
+           Dùng nút <strong>Tải xuống</strong> để mở bằng ứng dụng phù hợp.</p>
       </div>`;
   }
 
