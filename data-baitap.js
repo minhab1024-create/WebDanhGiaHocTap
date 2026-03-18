@@ -32,7 +32,7 @@ const BAITAP_LIST = [
     subject:     "📄",
     status:      "Đã thi",
     deadline:    "20/03/2025",
-    teacher:     "GV Vật Lý",
+    teacher:     "GV Sinh học",
   },
 {
     title:       "Đề cương ôn tập Lịch sử 11",
@@ -41,7 +41,7 @@ const BAITAP_LIST = [
     subject:     "📄",
     status:      "online",
     deadline:    "20/03/2025",
-    teacher:     "GV Vật Lý",
+    teacher:     "GV Lịch sử",
   },
 
   // ── THÊM BÀI MỚI PHÍA DƯỚI ĐÂY ──────────────────────────────────────
