@@ -33,7 +33,7 @@
 }
 [data-theme="light"] .bg-canvas{background:#f0f0f4;}
 [data-theme="light"] .orb{opacity:.12;}
-[data-theme="light"] .hover-glow{opacity:0!important;}
+[data-theme="light"] .bubble-name{color:#111;}
 [data-theme="light"] nav{background:var(--nav-bg);border-color:rgba(0,0,0,.10);}
 [data-theme="light"] nav.scrolled{background:rgba(235,235,240,.95);}
 [data-theme="light"] .nav-logo-text{background:linear-gradient(130deg,#111 40%,var(--red));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
@@ -59,8 +59,6 @@
 [data-theme="light"] .fmodal-title{color:#111;}
 [data-theme="light"] .fmodal-sub{color:rgba(0,0,0,.45);}
 [data-theme="light"] .bubble-item{background:rgba(255,255,255,.95);border-color:rgba(245,59,87,.35);}
-[data-theme="light"] .bubble-name{color:#111;}
-[data-theme="light"] .cursor-ring{border-color:rgba(245,59,87,.5);}
 [data-theme="light"] .nav-hamburger span{background:#333;}
 [data-theme="light"] .file-thumb{border-color:rgba(0,0,0,.08);}
 [data-theme="light"] .file-thumb.pdf-bg{background:linear-gradient(135deg,rgba(239,68,68,.12),rgba(220,38,38,.06));}
@@ -79,15 +77,9 @@ body{
   background:var(--dark2);
   color:var(--text);
   overflow-x:hidden;
-  cursor:none;
 }
 
-/* ══════════════════════════════════════════
-   CURSOR
-══════════════════════════════════════════ */
-.cursor{position:fixed;inset:0;z-index:9999;pointer-events:none;}
-.cursor-dot{width:7px;height:7px;border-radius:50%;background:var(--red);position:absolute;transform:translate(-50%,-50%);}
-.cursor-ring{width:34px;height:34px;border-radius:50%;border:1.5px solid rgba(245,59,87,.5);position:absolute;transform:translate(-50%,-50%);transition:width .18s,height .18s,border-color .18s;}
+/* ── CURSOR removed ── */
 
 /* ══════════════════════════════════════════
    ANIMATED BACKGROUND
@@ -104,14 +96,6 @@ body{
   50% {transform:translateY(22px)translateX(-22px)scale(.97);}
   75% {transform:translateY(-28px)translateX(-38px)scale(1.03);}
   100%{transform:translateY(0)translateX(0)scale(1);}
-}
-.hover-glow{
-  position:fixed;z-index:1;
-  width:420px;height:420px;border-radius:50%;
-  background:radial-gradient(circle,rgba(255,107,129,.14),transparent 70%);
-  filter:blur(45px);pointer-events:none;
-  transform:translate(-50%,-50%);
-  transition:opacity .35s;opacity:0;
 }
 
 /* ══════════════════════════════════════════
@@ -150,7 +134,7 @@ body{
 nav{
   position:fixed;top:0;left:0;right:0;z-index:200;
   height:66px;
-  display:flex;align-items:center;justify-content:space-between;
+  display:flex;align-items:center;gap:0;
   padding:0 clamp(24px,5vw,80px);
   background:rgba(19,19,21,.65);
   backdrop-filter:blur(22px);
@@ -158,11 +142,11 @@ nav{
   transition:background .35s;
 }
 nav.scrolled{background:rgba(13,13,15,.9);}
-.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;margin-right:2px;}
 .nav-logo-img{
   width:32px;height:32px;
   border-radius:8px;
-  object-fit:contain;          /* ← contain so logo không bị crop */
+  object-fit:contain;
   background:rgba(245,59,87,.12);
   padding:2px;
   box-shadow:0 0 0 1.5px rgba(245,59,87,.45);
@@ -172,22 +156,18 @@ nav.scrolled{background:rgba(13,13,15,.9);}
   background:linear-gradient(130deg,#fff 40%,var(--red2));
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;
 }
-.nav-links{display:flex;align-items:center;gap:4px;list-style:none;}
+.nav-links{display:flex;align-items:center;gap:2px;list-style:none;}
 .nav-links a{
   color:var(--muted);text-decoration:none;
   font-size:.85rem;font-weight:500;
-  padding:7px 14px;border-radius:8px;
+  padding:7px 11px;border-radius:8px;
   transition:color .2s,background .2s;
 }
 .nav-links a:hover,.nav-links a.active{color:#fff;background:var(--glass);}
-.nav-links a.cta{
-  background:linear-gradient(135deg,var(--red),var(--red2));
-  color:#fff!important;font-weight:700;
-  padding:7px 20px;
-  box-shadow:0 4px 18px rgba(245,59,87,.38);
-  transition:transform .2s,box-shadow .2s;
-}
-.nav-links a.cta:hover{transform:translateY(-1px);box-shadow:0 8px 26px rgba(245,59,87,.55);}
+/* Divider between logo group and nav links */
+.nav-divider{width:1px;height:20px;background:var(--border);margin:0 10px;flex-shrink:0;}
+/* Spacer pushes theme toggle + hamburger to the right */
+.nav-spacer{flex:1;}
 
 /* ══════════════════════════════════════════
    PAGE WRAPPER
@@ -268,42 +248,57 @@ footer p{font-size:.78rem;color:var(--muted);}
 .assign-card{
   background:var(--card);border:1px solid var(--border);
   border-radius:20px;padding:24px 22px 20px;
-  backdrop-filter:blur(14px);cursor:none;
-  transition:transform .3s,border-color .3s,box-shadow .3s;
+  backdrop-filter:blur(14px);
+  transition:padding .3s ease, margin .3s ease, border-color .25s, box-shadow .3s, background .25s;
   position:relative;overflow:hidden;
 }
-.assign-card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(245,59,87,.08),transparent 65%);opacity:0;transition:opacity .3s;pointer-events:none;border-radius:20px;}
-.assign-card:hover{transform:translateY(-5px);border-color:rgba(245,59,87,.4);box-shadow:0 18px 50px rgba(0,0,0,.3);}
+.assign-card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(245,59,87,.1),transparent 65%);opacity:0;transition:opacity .3s;pointer-events:none;border-radius:20px;}
+.assign-card:hover{
+  padding:34px 30px 30px;
+  margin:-5px -4px;
+  border-color:rgba(245,59,87,.55);
+  box-shadow:0 24px 64px rgba(0,0,0,.38), 0 0 0 1.5px rgba(245,59,87,.2);
+}
 .assign-card:hover::before{opacity:1;}
 .acard-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:14px;}
-.acard-icon{width:46px;height:46px;border-radius:13px;background:linear-gradient(135deg,rgba(245,59,87,.28),rgba(255,107,129,.14));border:1px solid rgba(245,59,87,.3);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;}
+.acard-icon{width:46px;height:46px;border-radius:13px;background:linear-gradient(135deg,rgba(245,59,87,.28),rgba(255,107,129,.14));border:1px solid rgba(245,59,87,.3);display:flex;align-items:center;justify-content:center;font-size:1.3rem;flex-shrink:0;transition:font-size .3s ease, width .3s ease, height .3s ease, box-shadow .3s ease, border-radius .3s ease;}
+.assign-card:hover .acard-icon{font-size:2rem;width:58px;height:58px;border-radius:16px;box-shadow:0 6px 20px rgba(245,59,87,.4);}
+
+.acard-title{font-size:1rem;font-weight:700;margin-bottom:6px;line-height:1.3;transition:font-size .3s ease;}
+.assign-card:hover .acard-title{font-size:1.1rem;}
 .status-badge{display:inline-flex;align-items:center;gap:5px;font-size:.68rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 10px;border-radius:100px;}
 .status-badge.online{background:rgba(52,211,153,.14);border:1px solid rgba(52,211,153,.32);color:#34d399;}
 .status-badge.offline{background:rgba(156,163,175,.1);border:1px solid rgba(156,163,175,.22);color:#9ca3af;}
 .status-dot{width:5px;height:5px;border-radius:50%;}
 .status-badge.online .status-dot{background:#34d399;animation:blink 1.5s ease infinite;}
 .status-badge.offline .status-dot{background:#9ca3af;}
-.acard-title{font-size:1rem;font-weight:700;margin-bottom:6px;line-height:1.3;}
 .acard-meta{font-size:.77rem;color:var(--muted);display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px;}
 .acard-btn{
   width:100%;padding:10px;border-radius:11px;border:none;
   background:linear-gradient(135deg,var(--red),var(--red2));
   color:#fff;font-family:'Be Vietnam Pro',sans-serif;
-  font-size:.85rem;font-weight:700;cursor:none;
+  font-size:.85rem;font-weight:700;
   display:flex;align-items:center;justify-content:center;gap:6px;
   box-shadow:0 4px 16px rgba(245,59,87,.35);
-  transition:transform .2s,box-shadow .2s;
+  transition:padding .3s ease, font-size .3s ease, box-shadow .3s ease, border-radius .3s ease, letter-spacing .3s ease;
 }
-.acard-btn:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(245,59,87,.5);}
+.assign-card:hover .acard-btn:not(.disabled){
+  padding:16px;
+  font-size:1rem;
+  border-radius:14px;
+  letter-spacing:.03em;
+  box-shadow:0 10px 32px rgba(245,59,87,.6);
+}
+.acard-btn:hover{box-shadow:0 12px 36px rgba(245,59,87,.7);}
 .acard-btn.disabled{background:rgba(156,163,175,.16);box-shadow:none;color:var(--muted);cursor:not-allowed;}
-.acard-btn.disabled:hover{transform:none;box-shadow:none;}
+.acard-btn.disabled:hover{box-shadow:none;}
 
 /* ══════════════════════════════════════════
    MODAL
 ══════════════════════════════════════════ */
 .modal-overlay{
   position:fixed;inset:0;z-index:500;
-  background:rgba(0,0,0,.8);backdrop-filter:blur(8px);
+  background:rgba(0,0,0,.82);backdrop-filter:none;
   display:flex;align-items:center;justify-content:center;
   padding:20px;
   opacity:0;pointer-events:none;transition:opacity .25s;
@@ -334,7 +329,7 @@ footer p{font-size:.78rem;color:var(--muted);}
 .mbtn{
   border:none;font-family:'Be Vietnam Pro',sans-serif;
   font-size:.76rem;font-weight:700;
-  border-radius:9px;padding:8px 14px;cursor:none;
+  border-radius:9px;padding:8px 14px;
   display:flex;align-items:center;gap:5px;
   transition:transform .18s,background .18s;
 }
@@ -359,7 +354,7 @@ footer p{font-size:.78rem;color:var(--muted);}
   background:linear-gradient(135deg,var(--red),var(--red2));
   color:#fff;border:none;font-family:'Be Vietnam Pro',sans-serif;
   font-size:.76rem;font-weight:700;
-  padding:7px 13px;border-radius:8px;cursor:none;
+  padding:7px 13px;border-radius:8px;
   transition:transform .18s,box-shadow .18s;white-space:nowrap;
 }
 .link-open:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(245,59,87,.45);}
@@ -461,16 +456,21 @@ footer p{font-size:.78rem;color:var(--muted);}
   padding:22px 18px 18px;
   backdrop-filter:blur(14px);
   cursor:pointer;
-  transition:transform .28s,border-color .28s,box-shadow .28s;
+  transition:padding .3s ease, margin .3s ease, border-color .25s, box-shadow .3s;
   position:relative;overflow:hidden;
   display:flex;flex-direction:column;gap:12px;
 }
 .file-card::before{
   content:'';position:absolute;inset:0;border-radius:18px;
-  background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(245,59,87,.07),transparent 65%);
+  background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(245,59,87,.09),transparent 65%);
   opacity:0;transition:opacity .3s;pointer-events:none;
 }
-.file-card:hover{transform:translateY(-4px);border-color:rgba(245,59,87,.35);box-shadow:0 16px 44px rgba(0,0,0,.28);}
+.file-card:hover{
+  padding:30px 24px 24px;
+  margin:-4px -3px;
+  border-color:rgba(245,59,87,.5);
+  box-shadow:0 22px 56px rgba(0,0,0,.34), 0 0 0 1.5px rgba(245,59,87,.18);
+}
 .file-card:hover::before{opacity:1;}
 
 .file-thumb{
@@ -482,7 +482,9 @@ footer p{font-size:.78rem;color:var(--muted);}
   border:1px solid var(--border);
   position:relative;overflow:hidden;
   flex-shrink:0;
+  transition:font-size .3s ease, height .3s ease;
 }
+.file-card:hover .file-thumb{ font-size:4.5rem; height:148px; }
 .file-thumb.pdf-bg{background:linear-gradient(135deg,rgba(239,68,68,.15),rgba(220,38,38,.08));}
 .file-thumb.word-bg{background:linear-gradient(135deg,rgba(59,130,246,.15),rgba(37,99,235,.08));}
 .file-thumb.other-bg{background:linear-gradient(135deg,rgba(107,114,128,.15),rgba(75,85,99,.08));}
@@ -511,13 +513,19 @@ footer p{font-size:.78rem;color:var(--muted);}
   flex:1;padding:8px 0;border-radius:10px;border:none;
   font-family:'Be Vietnam Pro',sans-serif;font-size:.78rem;font-weight:700;
   cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;
-  transition:transform .18s,box-shadow .18s,background .18s;
+  transition:padding .3s ease, font-size .3s ease, box-shadow .3s ease, border-radius .3s ease;
 }
 .file-btn-view{
   background:linear-gradient(135deg,var(--red),var(--red2));color:#fff;
   box-shadow:0 4px 14px rgba(245,59,87,.3);
 }
-.file-btn-view:hover{transform:translateY(-1px);box-shadow:0 7px 20px rgba(245,59,87,.45);}
+.file-card:hover .file-btn-view{
+  padding:14px 0;
+  font-size:.9rem;
+  border-radius:13px;
+  box-shadow:0 10px 30px rgba(245,59,87,.58);
+}
+.file-btn-view:hover{box-shadow:0 12px 36px rgba(245,59,87,.7);}
 .file-btn-dl{
   background:rgba(255,255,255,.07);color:#fff;
   border:1px solid var(--border);
@@ -546,7 +554,7 @@ footer p{font-size:.78rem;color:var(--muted);}
 ══════════════════════════════════════════ */
 .fmodal-overlay{
   position:fixed;inset:0;z-index:500;
-  background:rgba(0,0,0,.82);backdrop-filter:blur(10px);
+  background:rgba(0,0,0,.84);backdrop-filter:none;
   display:flex;align-items:center;justify-content:center;
   padding:20px;
   opacity:0;pointer-events:none;transition:opacity .25s;
@@ -651,6 +659,29 @@ footer p{font-size:.78rem;color:var(--muted);}
   text-align:center;
 }
 
+/* ── SITE FOOTER ── */
+.site-footer{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:20px clamp(20px,5vw,80px) 32px;
+  border-top:1px solid var(--border);
+  margin-top:48px;
+}
+.footer-left{display:flex;align-items:center;gap:10px;}
+.footer-logo-img{
+  width:30px;height:30px;border-radius:8px;
+  object-fit:contain;background:rgba(245,59,87,.1);
+  padding:2px;box-shadow:0 0 0 1.5px rgba(245,59,87,.35);
+}
+.footer-name{
+  font-family:'Syne',sans-serif;font-size:.95rem;font-weight:800;
+  background:linear-gradient(130deg,var(--text) 40%,var(--red2));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.footer-right{font-size:.78rem;color:var(--muted);text-align:right;}
+.footer-right strong{color:var(--text);font-weight:600;}
+[data-theme="light"] .footer-name{background:linear-gradient(130deg,#111 40%,var(--red));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+[data-theme="light"] .footer-right strong{color:#333;}
+
 @media(max-width:1024px){
   .file-grid{grid-template-columns:repeat(auto-fill,minmax(180px,1fr));}
 }
@@ -659,6 +690,7 @@ footer p{font-size:.78rem;color:var(--muted);}
   /* Nav */
   nav{height:56px;padding:0 16px;}
   .nav-links{display:none;}
+  .nav-divider{display:none;}
   .nav-hamburger{display:flex;}
   .nav-logo-text{font-size:.95rem;}
   /* Hide theme label on mobile nav, show only icon+track */
@@ -741,19 +773,11 @@ footer p{font-size:.78rem;color:var(--muted);}
 </head>
 <body>
 
-<!-- ── CURSOR ── -->
-<div class="cursor">
-  <div class="cursor-dot" id="dot"></div>
-  <div class="cursor-ring" id="ring"></div>
-</div>
-
 <!-- ── BACKGROUND ── -->
 <div class="bg-canvas">
   <div class="orb orb-1"></div><div class="orb orb-2"></div>
   <div class="orb orb-3"></div><div class="orb orb-4"></div>
 </div>
-<div class="hover-glow" id="hoverGlow"></div>
-
 <!-- ════════════════════════════════════════
      NAVBAR
 ════════════════════════════════════════ -->
@@ -762,10 +786,12 @@ footer p{font-size:.78rem;color:var(--muted);}
     <img src="logo.png" alt="HWAssist Logo" class="nav-logo-img">
     <span class="nav-logo-text">HWAssist</span>
   </a>
+  <div class="nav-divider"></div>
   <ul class="nav-links">
     <li><a href="#" onclick="showPage('baitap');return false;" id="link-baitap" class="active">📚 Bài tập</a></li>
     <li><a href="#" onclick="showPage('dethi');return false;" id="link-dethi">📁 Đề thi's</a></li>
   </ul>
+  <div class="nav-spacer"></div>
   <div class="nav-right">
     <!-- Theme toggle -->
     <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Chuyển theme">
@@ -810,6 +836,15 @@ footer p{font-size:.78rem;color:var(--muted);}
     ════════════════════════════════════════════════════════ -->
     <div class="assign-grid" id="assignGrid"></div>
   </div>
+  <footer class="site-footer">
+    <div class="footer-left">
+      <img src="logo.png" alt="Logo" class="footer-logo-img">
+      <span class="footer-name">HWAssist</span>
+    </div>
+    <div class="footer-right">
+      <strong>Lớp 11A3</strong> · 2025–2026
+    </div>
+  </footer>
 </div>
 
 <!-- ════════════════════════════════════════
@@ -824,6 +859,15 @@ footer p{font-size:.78rem;color:var(--muted);}
     <!-- File grid — render từ data-files.js -->
     <div class="file-grid" id="fileGrid"></div>
   </div>
+  <footer class="site-footer">
+    <div class="footer-left">
+      <img src="logo.png" alt="Logo" class="footer-logo-img">
+      <span class="footer-name">HWAssist</span>
+    </div>
+    <div class="footer-right">
+      <strong>Lớp 11A3</strong> · 2025–2026
+    </div>
+  </footer>
 </div>
 
 <!-- ════════════════════════════════════════
@@ -934,7 +978,6 @@ function showPage(p) {
   window.scrollTo({top:0, behavior:'smooth'});
   if (p === 'baitap') setTimeout(revealCards, 80);
   if (p === 'dethi')  setTimeout(buildFileGrid, 80);
-  setTimeout(updateCursor, 50);
 }
 
 // Mặc định vào trang bài tập khi load
@@ -1250,14 +1293,12 @@ function openFModal(path, name, icon, ext) {
 
   document.getElementById('fmodalOverlay').classList.add('open');
   document.body.style.overflow = 'hidden';
-  updateCursor();
 }
 
 function closeFModal() {
   document.getElementById('fmodalOverlay').classList.remove('open');
   document.body.style.overflow = '';
   setTimeout(() => { document.getElementById('fmodalContent').innerHTML = ''; }, 280);
-  updateCursor();
 }
 
 document.getElementById('fmodalOverlay').addEventListener('click', e => {
@@ -1465,73 +1506,6 @@ document.addEventListener('keydown', e => {
 window.addEventListener('scroll',()=>{
   document.getElementById('navbar').classList.toggle('scrolled',window.scrollY>30);
 });
-
-// ─── CURSOR ───────────────────────────────
-const dot=document.getElementById('dot'), ring=document.getElementById('ring');
-let mx=0,my=0,rx=0,ry=0;
-
-let fModalOpen = false;   // flag đơn giản, không phụ thuộc DOM class
-
-// ─── CURSOR MANAGER ───────────────────────
-// Một hàm duy nhất quyết định cursor ở đâu
-function updateCursor() {
-  const bp = document.getElementById('baitap-page');
-  const dp = document.getElementById('dethi-page');
-  const baitapModalOpen = document.getElementById('modalOverlay').classList.contains('open');
-  const fmodalOpen      = document.getElementById('fmodalOverlay').classList.contains('open');
-
-  const onFunctionalPage = (bp && bp.style.display === 'block')
-                        || (dp && dp.style.display === 'block');
-
-  // Custom cursor chỉ bật khi: trang giới thiệu, HOẶC một trong 2 modal đang mở
-  const useCustom = !onFunctionalPage || baitapModalOpen || fmodalOpen;
-
-  dot.style.opacity  = useCustom ? '1' : '0';
-  ring.style.opacity = useCustom ? '1' : '0';
-  document.body.style.cursor = useCustom ? 'none' : 'auto';
-}
-
-function isOnBaitap() {
-  const bp = document.getElementById('baitap-page');
-  const dp = document.getElementById('dethi-page');
-  const baitapModalOpen = document.getElementById('modalOverlay').classList.contains('open');
-  const fmodalOpen      = document.getElementById('fmodalOverlay').classList.contains('open');
-  const onFunctional = (bp && bp.style.display === 'block') || (dp && dp.style.display === 'block');
-  return onFunctional && !baitapModalOpen && !fmodalOpen;
-}
-
-document.addEventListener('mousemove', e => {
-  mx = e.clientX; my = e.clientY;
-  if (!isOnBaitap()) {
-    dot.style.left = mx+'px'; dot.style.top = my+'px';
-  }
-});
-
-(function loop() {
-  if (!isOnBaitap()) {
-    rx += (mx-rx)*.12; ry += (my-ry)*.12;
-    ring.style.left = rx+'px'; ring.style.top = ry+'px';
-  }
-  requestAnimationFrame(loop);
-})();
-
-document.addEventListener('mouseover', e => {
-  if (isOnBaitap()) return;
-  const b = e.target.closest('a,button');
-  ring.style.width       = b ? '48px' : '34px';
-  ring.style.height      = b ? '48px' : '34px';
-  ring.style.borderColor = b ? 'rgba(245,59,87,.9)' : 'rgba(245,59,87,.5)';
-});
-
-// ─── HOVER GLOW ───────────────────────────
-const glow = document.getElementById('hoverGlow');
-document.addEventListener('mousemove', e => {
-  if (isOnBaitap()) { glow.style.opacity = '0'; return; }
-  glow.style.left    = e.clientX + 'px';
-  glow.style.top     = e.clientY + 'px';
-  glow.style.opacity = '1';
-});
-document.addEventListener('mouseleave', () => { glow.style.opacity = '0'; });
 
 // ─── SCROLL REVEAL ────────────────────────
 const io = new IntersectionObserver(entries => {

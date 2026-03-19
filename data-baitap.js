@@ -43,7 +43,15 @@ const BAITAP_LIST = [
     deadline:    "20/03/2025",
     teacher:     "GV Lịch sử",
   },
-
+{
+    title:       "Đề cương ôn tập Địa lý 11",
+    url:         "https://azota.vn/de-thi/of1xn5",
+    iframeTitle: "ĐỀ CƯƠNG ÔN TẬP Địa lý 11 GHK2",
+    subject:     "📄",
+    status:      "online",
+    deadline:    "20/03/2025",
+    teacher:     "GV Địa lý	",
+  },
   // ── THÊM BÀI MỚI PHÍA DƯỚI ĐÂY ──────────────────────────────────────
 
   // {
