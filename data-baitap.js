@@ -52,6 +52,15 @@ const BAITAP_LIST = [
     deadline:    "20/03/2025",
     teacher:     "GV Địa lý	",
   },
+{
+    title:       "Đề cương ôn tập Tin 11 (MỘT SỐ CÂU KO CHẮC SẼ ĐÚNG)",
+    url:         "https://azota.vn/de-thi/b5pxec",
+    iframeTitle: "ĐỀ CƯƠNG ÔN TẬP Tin 11 GHK2",
+    subject:     "📄",
+    status:      "online",
+    deadline:    "20/03/2025",
+    teacher:     "GV Tin	",
+  },
   // ── THÊM BÀI MỚI PHÍA DƯỚI ĐÂY ──────────────────────────────────────
 
   // {
