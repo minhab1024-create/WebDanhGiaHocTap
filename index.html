@@ -82,21 +82,85 @@ body{
 /* ── CURSOR removed ── */
 
 /* ══════════════════════════════════════════
-   ANIMATED BACKGROUND
+   ANIMATED BACKGROUND — subtle tech grid
 ══════════════════════════════════════════ */
-.bg-canvas{position:fixed;inset:0;z-index:0;background:var(--dark2);overflow:hidden;}
-.orb{position:absolute;border-radius:50%;filter:blur(90px);animation:drift linear infinite;will-change:transform;}
-.orb-1{width:700px;height:700px;background:radial-gradient(circle,rgba(245,59,87,.28),transparent 68%);top:-200px;left:-180px;animation-duration:20s;}
-.orb-2{width:500px;height:500px;background:radial-gradient(circle,rgba(255,107,129,.22),transparent 68%);top:30%;right:-120px;animation-duration:25s;animation-delay:-7s;}
-.orb-3{width:380px;height:380px;background:radial-gradient(circle,rgba(255,143,163,.18),transparent 68%);bottom:-80px;left:28%;animation-duration:17s;animation-delay:-11s;}
-.orb-4{width:320px;height:320px;background:radial-gradient(circle,rgba(192,57,43,.22),transparent 68%);top:15%;left:55%;animation-duration:22s;animation-delay:-4s;}
-@keyframes drift{
-  0%  {transform:translateY(0)translateX(0)scale(1);}
-  25% {transform:translateY(-45px)translateX(35px)scale(1.04);}
-  50% {transform:translateY(22px)translateX(-22px)scale(.97);}
-  75% {transform:translateY(-28px)translateX(-38px)scale(1.03);}
-  100%{transform:translateY(0)translateX(0)scale(1);}
+.bg-canvas{
+  position:fixed;inset:0;z-index:0;
+  background:var(--dark2);
+  overflow:hidden;
 }
+
+/* Lưới chấm nền */
+.bg-canvas::before{
+  content:'';
+  position:absolute;inset:0;
+  background-image:
+    radial-gradient(circle, rgba(255,255,255,.07) 1px, transparent 1px);
+  background-size:36px 36px;
+  animation:gridShift 20s linear infinite;
+  will-change:transform;
+}
+
+/* Đường glow chéo di chuyển */
+.bg-canvas::after{
+  content:'';
+  position:absolute;
+  width:200%;height:200%;
+  top:-50%;left:-50%;
+  background:
+    linear-gradient(105deg,
+      transparent 40%,
+      rgba(245,59,87,.03) 50%,
+      transparent 60%
+    );
+  animation:sweepLight 8s ease-in-out infinite;
+  will-change:transform;
+}
+
+@keyframes gridShift{
+  0%  { transform:translate(0,0); }
+  100%{ transform:translate(36px,36px); }
+}
+@keyframes sweepLight{
+  0%,100%{ transform:translateX(-30%) rotate(0deg); opacity:0; }
+  30%    { opacity:1; }
+  50%    { transform:translateX(30%) rotate(0deg); opacity:1; }
+  80%    { opacity:0; }
+}
+
+/* Orb đơn sắc — chỉ 1 màu đỏ rất mờ làm điểm nhấn */
+.orb{position:absolute;border-radius:50%;filter:blur(120px);will-change:transform;}
+.orb-1{
+  width:600px;height:600px;
+  background:radial-gradient(circle,rgba(245,59,87,.12),transparent 70%);
+  top:-100px;left:-100px;
+  animation:breathe 12s ease-in-out infinite;
+}
+.orb-2{
+  width:400px;height:400px;
+  background:radial-gradient(circle,rgba(245,59,87,.08),transparent 70%);
+  bottom:-80px;right:-80px;
+  animation:breathe 16s ease-in-out infinite reverse;
+  animation-delay:-6s;
+}
+.orb-3{ display:none; }
+.orb-4{ display:none; }
+
+@keyframes breathe{
+  0%,100%{ transform:scale(1); opacity:.7; }
+  50%    { transform:scale(1.15); opacity:1; }
+}
+
+/* Light theme override */
+[data-theme="light"] .bg-canvas{background:#f0f0f4;}
+[data-theme="light"] .bg-canvas::before{
+  background-image:radial-gradient(circle,rgba(0,0,0,.08) 1px,transparent 1px);
+}
+[data-theme="light"] .bg-canvas::after{
+  background:linear-gradient(105deg,transparent 40%,rgba(245,59,87,.04) 50%,transparent 60%);
+}
+[data-theme="light"] .orb-1{background:radial-gradient(circle,rgba(245,59,87,.08),transparent 70%);}
+[data-theme="light"] .orb-2{background:radial-gradient(circle,rgba(245,59,87,.06),transparent 70%);}
 
 /* ══════════════════════════════════════════
    NAVBAR
@@ -993,20 +1057,14 @@ document.addEventListener('DOMContentLoaded', () => {
 function applyTheme(theme) {
   document.documentElement.setAttribute('data-theme', theme);
   const isLight = theme === 'light';
-  // desktop
   const icon  = document.getElementById('themeIcon');
   const label = document.getElementById('themeLabel');
   if (icon)  icon.textContent  = isLight ? '☀️' : '🌙';
   if (label) label.textContent = isLight ? 'Sáng' : 'Tối';
-  // mobile
   const iconM  = document.getElementById('themeIconMobile');
   const labelM = document.getElementById('themeLabelMobile');
   if (iconM)  iconM.textContent  = isLight ? '☀️' : '🌙';
   if (labelM) labelM.textContent = isLight ? 'Chế độ Sáng' : 'Chế độ Tối';
-  // Orb opacity
-  document.querySelectorAll('.orb').forEach(o => {
-    o.style.opacity = isLight ? '.1' : '.2';
-  });
 }
 
 function toggleTheme() {
