@@ -12,5 +12,5 @@
 // =====================================================
 
 const BT_DATA = [
-  { ten: "Bài tập Hàm số và ", mon: "nigga", link: "https://azota.vn/de-thi/8p1fgt" },
+  { ten: "kiểm tra tin học", mon: "tin học", link: "https://azota.vn/de-thi/8p1fgt" },
 ];
