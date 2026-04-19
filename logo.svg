@@ -1,0 +1,37 @@
+<svg width="500" height="500" viewBox="0 0 680 680" role="img" xmlns="http://www.w3.org/2000/svg">
+  <title>Logo quyển bài thi</title>
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#094B47"/>
+      <stop offset="55%" stop-color="#8A916F"/>
+      <stop offset="100%" stop-color="#E2E3D3"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="680" height="680" fill="url(#bgGrad)" rx="80"/>
+
+  <!-- Thân sách -->
+  <rect x="190" y="170" width="300" height="380" rx="14" fill="#E2E3D3" opacity="0.95"/>
+
+  <!-- Gáy sách -->
+  <rect x="190" y="170" width="30" height="380" rx="8" fill="#8A916F"/>
+  <rect x="207" y="170" width="13" height="380" fill="#7a8162"/>
+
+  <!-- Ô họ tên -->
+  <rect x="240" y="190" width="210" height="36" rx="5" fill="none" stroke="#094B47" stroke-width="2" opacity="0.35"/>
+
+  <!-- Đường kẻ dòng -->
+  <line x1="240" y1="250" x2="465" y2="250" stroke="#8A916F" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
+  <line x1="240" y1="285" x2="465" y2="285" stroke="#8A916F" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
+  <line x1="240" y1="320" x2="465" y2="320" stroke="#8A916F" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
+  <line x1="240" y1="355" x2="465" y2="355" stroke="#8A916F" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
+  <line x1="240" y1="390" x2="465" y2="390" stroke="#8A916F" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
+  <line x1="240" y1="425" x2="420" y2="425" stroke="#8A916F" stroke-width="2.5" stroke-linecap="round" opacity="0.5"/>
+
+  <!-- Dấu check -->
+  <circle cx="432" cy="468" r="22" fill="#094B47" opacity="0.15"/>
+  <polyline points="421,468 430,477 445,459" fill="none" stroke="#094B47" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+
+  <!-- Bóng -->
+  <ellipse cx="340" cy="558" rx="120" ry="12" fill="#000" opacity="0.10"/>
+</svg>
