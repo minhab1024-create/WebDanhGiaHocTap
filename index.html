@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html lang="vi" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Azota Học Tập</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Be+Vietnam+Pro:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    :root {
+      --sand: #E2E3D3;
+      --olive: #8A916F;
+      --forest: #094B47;
+
+      /* LIGHT MODE */
+      --bg: #f0f1e8;
+      --bg2: #E2E3D3;
+      --nav-bg: #094B47;
+      --nav-text: #E2E3D3;
+      --nav-hover: rgba(226,227,211,0.15);
+      --nav-active-bg: #E2E3D3;
+      --nav-active-text: #094B47;
+      --card-bg: #ffffff;
+      --card-border: rgba(138,145,111,0.25);
+      --card-shadow: 0 4px 24px rgba(9,75,71,0.10);
+      --card-hover-shadow: 0 12px 40px rgba(9,75,71,0.18);
+      --text-primary: #1a2e2d;
+      --text-secondary: #4a5c4f;
+      --text-muted: #8A916F;
+      --badge-bg: rgba(9,75,71,0.08);
+      --badge-text: #094B47;
+      --overlay-bg: rgba(9, 75, 71, 0.55);
+      --modal-bg: #ffffff;
+      --modal-header: #094B47;
+      --modal-header-text: #E2E3D3;
+      --iframe-border: rgba(9,75,71,0.2);
+      --toggle-bg: rgba(226,227,211,0.2);
+      --toggle-icon: #E2E3D3;
+      --intro-accent: #094B47;
+      --intro-card-bg: rgba(9,75,71,0.06);
+      --divider: rgba(138,145,111,0.3);
+      --play-btn-bg: #094B47;
+      --play-btn-text: #E2E3D3;
+      --play-btn-hover: #0a5c57;
+    }
+
+    [data-theme="dark"] {
+      --bg: #0e1f1e;
+      --bg2: #152b29;
+      --nav-bg: #071f1d;
+      --nav-text: #E2E3D3;
+      --nav-hover: rgba(226,227,211,0.10);
+      --nav-active-bg: #8A916F;
+      --nav-active-text: #E2E3D3;
+      --card-bg: #1a2e2d;
+      --card-border: rgba(138,145,111,0.20);
+      --card-shadow: 0 4px 24px rgba(0,0,0,0.35);
+      --card-hover-shadow: 0 12px 40px rgba(0,0,0,0.50);
+      --text-primary: #dde2d5;
+      --text-secondary: #a8b49a;
+      --text-muted: #8A916F;
+      --badge-bg: rgba(138,145,111,0.18);
+      --badge-text: #b8c4a0;
+      --overlay-bg: rgba(0,0,0,0.70);
+      --modal-bg: #1a2e2d;
+      --modal-header: #071f1d;
+      --modal-header-text: #E2E3D3;
+      --iframe-border: rgba(138,145,111,0.25);
+      --toggle-bg: rgba(226,227,211,0.08);
+      --toggle-icon: #E2E3D3;
+      --intro-accent: #8A916F;
+      --intro-card-bg: rgba(138,145,111,0.10);
+      --divider: rgba(138,145,111,0.2);
+      --play-btn-bg: #8A916F;
+      --play-btn-text: #E2E3D3;
+      --play-btn-hover: #9aa07e;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Be Vietnam Pro', sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      min-height: 100vh;
+      transition: background 0.35s, color 0.35s;
+      overflow-x: hidden;
+    }
+
+    /* ===== NAVBAR ===== */
+    .navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 62px;
+      background: var(--nav-bg);
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      gap: 6px;
+      z-index: 1000;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.18);
+      transition: background 0.35s;
+    }
+
+    .nav-logo {
+      flex-shrink: 0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      margin-right: 10px;
+      text-decoration: none;
+    }
+
+    .nav-logo img {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      object-fit: cover;
+      border: 2px solid rgba(226,227,211,0.35);
+      transition: transform 0.2s, border-color 0.2s;
+    }
+
+    .nav-logo:hover img {
+      transform: scale(1.08);
+      border-color: var(--sand);
+    }
+
+    .nav-divider {
+      width: 1px;
+      height: 28px;
+      background: rgba(226,227,211,0.2);
+      margin: 0 8px;
+      flex-shrink: 0;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex: 1;
+    }
+
+    .nav-btn {
+      background: none;
+      border: none;
+      color: var(--nav-text);
+      font-family: 'Be Vietnam Pro', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 500;
+      padding: 7px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      letter-spacing: 0.01em;
+      transition: background 0.2s, color 0.2s, transform 0.15s;
+      position: relative;
+      opacity: 0.85;
+    }
+
+    .nav-btn:hover {
+      background: var(--nav-hover);
+      opacity: 1;
+    }
+
+    .nav-btn.active {
+      background: var(--nav-active-bg);
+      color: var(--nav-active-text);
+      font-weight: 600;
+      opacity: 1;
+    }
+
+    .nav-btn.active::after {
+      content: '';
+      position: absolute;
+      bottom: -2px; left: 50%;
+      transform: translateX(-50%);
+      width: 20px; height: 3px;
+      background: var(--olive);
+      border-radius: 2px;
+    }
+
+    .nav-right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .theme-toggle {
+      background: var(--toggle-bg);
+      border: 1.5px solid rgba(226,227,211,0.25);
+      color: var(--toggle-icon);
+      width: 38px; height: 38px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      transition: background 0.2s, transform 0.2s, border-color 0.2s;
+    }
+
+    .theme-toggle:hover {
+      background: rgba(226,227,211,0.2);
+      transform: rotate(18deg) scale(1.08);
+    }
+
+    /* ===== MAIN ===== */
+    .main-content {
+      margin-top: 62px;
+      min-height: calc(100vh - 62px);
+      padding: 32px 24px;
+      max-width: 1280px;
+      margin-left: auto;
+      margin-right: auto;
+      margin-top: 62px;
+    }
+
+    /* ===== PAGES ===== */
+    .page { display: none; animation: fadeIn 0.35s ease; }
+    .page.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ===== BÀI TẬP PAGE ===== */
+    .page-header {
+      margin-bottom: 28px;
+    }
+
+    .page-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      color: var(--forest);
+      margin-bottom: 6px;
+    }
+
+    [data-theme="dark"] .page-title { color: var(--sand); }
+
+    .page-subtitle {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 400;
+    }
+
+    .subject-filter {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 28px;
+    }
+
+    .filter-btn {
+      background: var(--card-bg);
+      border: 1.5px solid var(--card-border);
+      color: var(--text-secondary);
+      font-family: 'Be Vietnam Pro', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 500;
+      padding: 6px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .filter-btn:hover, .filter-btn.active {
+      background: var(--forest);
+      border-color: var(--forest);
+      color: var(--sand);
+    }
+
+    [data-theme="dark"] .filter-btn:hover,
+    [data-theme="dark"] .filter-btn.active {
+      background: var(--olive);
+      border-color: var(--olive);
+    }
+
+    /* ===== GRID ===== */
+    .bt-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+    }
+
+    /* ===== CARD ===== */
+    .bt-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: var(--card-shadow);
+      transition: transform 0.25s, box-shadow 0.25s;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .bt-card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--card-hover-shadow);
+    }
+
+    .card-thumb {
+      position: relative;
+      background: linear-gradient(135deg, var(--forest) 0%, #0a6b63 100%);
+      height: 148px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    [data-theme="dark"] .card-thumb {
+      background: linear-gradient(135deg, #071f1d 0%, #0f3533 100%);
+    }
+
+    .card-thumb-pattern {
+      position: absolute;
+      inset: 0;
+      opacity: 0.07;
+      background-image: radial-gradient(circle, var(--sand) 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+
+    .card-thumb-icon {
+      font-size: 3.2rem;
+      color: rgba(226,227,211,0.6);
+      position: relative;
+      z-index: 1;
+      transition: transform 0.3s, color 0.3s;
+    }
+
+    .bt-card:hover .card-thumb-icon {
+      transform: scale(1.1);
+      color: rgba(226,227,211,0.85);
+    }
+
+    .play-btn {
+      position: absolute;
+      bottom: 12px; right: 12px;
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      background: var(--play-btn-bg);
+      color: var(--play-btn-text);
+      border: 2.5px solid rgba(226,227,211,0.5);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.95rem;
+      z-index: 2;
+      transition: background 0.2s, transform 0.2s, border-color 0.2s;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+    }
+
+    .play-btn:hover {
+      background: var(--olive);
+      border-color: var(--sand);
+      transform: scale(1.1);
+    }
+
+    .card-body {
+      padding: 14px 16px 16px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .card-subject {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--badge-bg);
+      color: var(--badge-text);
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 20px;
+      width: fit-content;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .card-title {
+      font-family: 'Be Vietnam Pro', sans-serif;
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      line-height: 1.4;
+    }
+
+    .card-action {
+      margin-top: auto;
+      padding-top: 8px;
+      border-top: 1px solid var(--divider);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-action-text {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .open-btn-inline {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--forest);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-family: 'Be Vietnam Pro', sans-serif;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 8px;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
+
+    [data-theme="dark"] .open-btn-inline { color: var(--olive); }
+
+    .open-btn-inline:hover { background: var(--badge-bg); }
+
+    /* ===== MODAL ===== */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: var(--overlay-bg);
+      z-index: 2000;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-overlay.open { display: flex; animation: fadeIn 0.2s ease; }
+
+    .modal-box {
+      background: var(--modal-bg);
+      border-radius: 18px;
+      overflow: hidden;
+      width: 100%;
+      max-width: 1100px;
+      height: 92vh;
+      max-height: 860px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 24px 80px rgba(0,0,0,0.4);
+      animation: slideUp 0.3s ease;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(30px) scale(0.97); opacity: 0; }
+      to   { transform: translateY(0) scale(1); opacity: 1; }
+    }
+
+    .modal-header {
+      background: var(--modal-header);
+      color: var(--modal-header-text);
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .modal-icon {
+      width: 34px; height: 34px;
+      background: rgba(226,227,211,0.15);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.95rem;
+      flex-shrink: 0;
+    }
+
+    .modal-info { flex: 1; min-width: 0; }
+
+    .modal-title {
+      font-family: 'Be Vietnam Pro', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .modal-subject {
+      font-size: 0.75rem;
+      opacity: 0.7;
+      margin-top: 2px;
+    }
+
+    .modal-box.fullscreen {
+      max-width: 100vw !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      max-height: 100vh !important;
+      border-radius: 0 !important;
+    }
+
+    .modal-overlay.fullscreen-mode {
+      padding: 0;
+    }
+
+    .fullscreen-btn {
+      background: rgba(226,227,211,0.15);
+      border: 1px solid rgba(226,227,211,0.25);
+      color: var(--modal-header-text);
+      width: 34px; height: 34px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.9rem;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .fullscreen-btn:hover {
+      background: rgba(226,227,211,0.25);
+      transform: scale(1.08);
+    }
+
+    .modal-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .modal-new-tab {
+      background: rgba(226,227,211,0.15);
+      border: 1px solid rgba(226,227,211,0.25);
+      color: var(--modal-header-text);
+      font-family: 'Be Vietnam Pro', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 500;
+      padding: 7px 13px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex; align-items: center; gap: 6px;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+
+    .modal-new-tab:hover { background: rgba(226,227,211,0.25); }
+
+    .modal-close {
+      background: rgba(226,227,211,0.15);
+      border: 1px solid rgba(226,227,211,0.25);
+      color: var(--modal-header-text);
+      width: 34px; height: 34px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .modal-close:hover {
+      background: rgba(220,50,50,0.25);
+      transform: rotate(90deg);
+    }
+
+    .modal-iframe-wrap {
+      flex: 1;
+      position: relative;
+      background: #f0f0f0;
+    }
+
+    .modal-iframe-wrap iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+
+    .iframe-blocked-msg {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      background: var(--bg2);
+      color: var(--text-secondary);
+      text-align: center;
+      padding: 24px;
+    }
+
+    .iframe-blocked-msg i {
+      font-size: 3rem;
+      color: var(--olive);
+    }
+
+    .iframe-blocked-msg p {
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .iframe-blocked-msg a {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--forest);
+      color: var(--sand);
+      padding: 10px 22px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: background 0.2s;
+    }
+
+    .iframe-blocked-msg a:hover { background: var(--olive); }
+
+    /* ===== CONFIRM DIALOG ===== */
+    .confirm-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 3000;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(3px);
+    }
+
+    .confirm-overlay.open { display: flex; animation: fadeIn 0.15s ease; }
+
+    .confirm-box {
+      background: var(--modal-bg);
+      border-radius: 16px;
+      padding: 28px 28px 22px;
+      max-width: 360px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 16px 60px rgba(0,0,0,0.4);
+      animation: slideUp 0.2s ease;
+    }
+
+    .confirm-icon {
+      font-size: 2.5rem;
+      color: var(--olive);
+      margin-bottom: 14px;
+    }
+
+    .confirm-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.15rem;
+      color: var(--text-primary);
+      margin-bottom: 10px;
+    }
+
+    .confirm-msg {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 22px;
+    }
+
+    .confirm-btns {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .confirm-no {
+      background: var(--card-bg);
+      border: 1.5px solid var(--card-border);
+      color: var(--text-secondary);
+      font-family: 'Be Vietnam Pro', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 500;
+      padding: 9px 22px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .confirm-no:hover { background: var(--bg2); }
+
+    .confirm-yes {
+      background: #c0392b;
+      border: none;
+      color: white;
+      font-family: 'Be Vietnam Pro', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 600;
+      padding: 9px 22px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .confirm-yes:hover { background: #a93226; }
+
+    /* ===== GIỚI THIỆU PAGE ===== */
+    .intro-page {
+      display: none;
+      height: calc(100vh - 62px - 64px);
+      align-items: center;
+      justify-content: center;
+    }
+
+    .intro-page.active {
+      display: flex;
+      animation: fadeIn 0.35s ease;
+    }
+
+    .intro-container {
+      width: 100%;
+      max-width: 820px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 28px;
+      align-items: center;
+    }
+
+    .intro-left {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .intro-logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .intro-logo {
+      width: 58px; height: 58px;
+      border-radius: 14px;
+      object-fit: cover;
+      border: 2.5px solid var(--olive);
+      box-shadow: 0 4px 16px rgba(9,75,71,0.18);
+    }
+
+    .intro-brand {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      color: var(--intro-accent);
+      line-height: 1.2;
+    }
+
+    .intro-brand span {
+      display: block;
+      font-size: 0.78rem;
+      font-family: 'Be Vietnam Pro', sans-serif;
+      font-weight: 400;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .intro-desc {
+      font-size: 0.92rem;
+      color: var(--text-secondary);
+      line-height: 1.75;
+      border-left: 3px solid var(--olive);
+      padding-left: 14px;
+    }
+
+    .intro-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .intro-tag {
+      background: var(--intro-card-bg);
+      border: 1px solid var(--divider);
+      color: var(--text-secondary);
+      font-size: 0.78rem;
+      font-weight: 500;
+      padding: 5px 12px;
+      border-radius: 20px;
+    }
+
+    .intro-right {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .intro-card {
+      background: var(--intro-card-bg);
+      border: 1px solid var(--divider);
+      border-radius: 14px;
+      padding: 16px 18px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      transition: transform 0.2s;
+    }
+
+    .intro-card:hover { transform: translateX(4px); }
+
+    .intro-card-icon {
+      width: 38px; height: 38px;
+      background: var(--forest);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--sand);
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    [data-theme="dark"] .intro-card-icon { background: var(--olive); }
+
+    .intro-card-text h4 {
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .intro-card-text p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .intro-footer {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding-top: 8px;
+      border-top: 1px solid var(--divider);
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+
+
+    /* ===== LOADING ===== */
+    .loading-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 20px;
+      gap: 16px;
+      color: var(--text-muted);
+    }
+
+    .spinner {
+      width: 36px; height: 36px;
+      border: 3px solid var(--divider);
+      border-top-color: var(--forest);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ===== EMPTY STATE ===== */
+    .empty-state {
+      text-align: center;
+      padding: 80px 20px;
+      color: var(--text-muted);
+    }
+
+    .empty-state i { font-size: 3rem; margin-bottom: 16px; display: block; }
+
+    /* ===== MOBILE ===== */
+    @media (max-width: 640px) {
+      .navbar { padding: 0 12px; gap: 4px; }
+      .nav-btn { padding: 7px 11px; font-size: 0.82rem; }
+      .nav-divider { margin: 0 4px; }
+      .main-content { padding: 20px 14px; }
+
+      .bt-grid { grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 14px; }
+      .card-thumb { height: 110px; }
+      .card-thumb-icon { font-size: 2.4rem; }
+      .play-btn { width: 36px; height: 36px; font-size: 0.85rem; }
+      .card-body { padding: 10px 12px 12px; }
+
+      .modal-box { height: 95vh; max-height: none; border-radius: 14px; }
+      .modal-new-tab span { display: none; }
+      .modal-new-tab { padding: 7px 9px; }
+
+      .intro-page { height: auto; padding: 16px 0; }
+      .intro-container { grid-template-columns: 1fr; gap: 16px; max-width: 480px; }
+      .intro-right { gap: 10px; }
+      .intro-footer { grid-column: 1; }
+
+      .subject-filter { gap: 6px; }
+      .filter-btn { padding: 5px 11px; font-size: 0.75rem; }
+    }
+
+    @media (max-width: 380px) {
+      .nav-btn { padding: 6px 8px; font-size: 0.78rem; }
+      .bt-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+    }
+  </style>
+  <script src="bt.js"></script>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar">
+    <a class="nav-logo" onclick="goHome()" href="#">
+      <img src="logo.svg" alt="Logo" onerror="this.style.display='none';this.nextSibling.style.display='flex'" />
+      <span style="display:none;width:40px;height:40px;border-radius:10px;background:var(--olive);align-items:center;justify-content:center;color:var(--sand);font-size:1.1rem;"><i class="fas fa-graduation-cap"></i></span>
+    </a>
+
+    <div class="nav-divider"></div>
+
+    <div class="nav-links">
+      <button class="nav-btn active" id="nav-baitap" onclick="showPage('baitap')">
+        <i class="fas fa-tasks" style="margin-right:5px;font-size:0.85em;"></i>Bài tập Azota
+      </button>
+      <button class="nav-btn" id="nav-gioithieu" onclick="showPage('gioithieu')">
+        <i class="fas fa-info-circle" style="margin-right:5px;font-size:0.85em;"></i>Giới thiệu
+      </button>
+    </div>
+
+    <div class="nav-right">
+      <button class="theme-toggle" onclick="toggleTheme()" title="Chuyển sáng / tối">
+        <i class="fas fa-sun" id="theme-icon"></i>
+      </button>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <main class="main-content">
+
+    <!-- PAGE: BÀI TẬP -->
+    <section class="page active" id="page-baitap">
+      <div class="page-header">
+        <h1 class="page-title">📚 Bài tập Azota</h1>
+        <p class="page-subtitle">Chọn bài tập và bắt đầu làm — chuẩn bị thi giữa kì 2</p>
+      </div>
+
+      <div class="subject-filter" id="filter-wrap">
+        <button class="filter-btn active" data-filter="all" onclick="filterSubject('all', this)">Tất cả</button>
+      </div>
+
+      <div class="bt-grid" id="bt-grid">
+        <div class="loading-state">
+          <div class="spinner"></div>
+          <span>Đang tải bài tập...</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- PAGE: GIỚI THIỆU -->
+    <section class="intro-page" id="page-gioithieu">
+      <div class="intro-container">
+
+        <div class="intro-left">
+          <div class="intro-logo-wrap">
+            <img class="intro-logo" src="logo.svg" alt="Logo" onerror="this.style.background='var(--olive)';this.style.content=''" />
+            <div class="intro-brand">
+              Azota Học Tập
+              <span>Nền tảng ôn luyện</span>
+            </div>
+          </div>
+
+          <p class="intro-desc">
+            Trang web được tạo ra để giúp bạn <strong>làm bài tập Azota</strong> một cách tiện lợi, nhanh chóng — tất cả ở một nơi, không cần tìm link khắp nơi.
+            <br><br>
+            Tập trung vào ôn luyện chuẩn bị <strong>thi giữa kì 2</strong> với đầy đủ các môn học.
+          </p>
+
+          <div class="intro-tags">
+            <span class="intro-tag"><i class="fas fa-book" style="margin-right:5px;"></i>Toán</span>
+            <span class="intro-tag"><i class="fas fa-atom" style="margin-right:5px;"></i>Vật Lý</span>
+            <span class="intro-tag"><i class="fas fa-flask" style="margin-right:5px;"></i>Hóa Học</span>
+            <span class="intro-tag"><i class="fas fa-leaf" style="margin-right:5px;"></i>Sinh Học</span>
+            <span class="intro-tag"><i class="fas fa-pen-nib" style="margin-right:5px;"></i>Ngữ Văn</span>
+            <span class="intro-tag"><i class="fas fa-language" style="margin-right:5px;"></i>Tiếng Anh</span>
+            <span class="intro-tag"><i class="fas fa-landmark" style="margin-right:5px;"></i>Lịch Sử</span>
+            <span class="intro-tag"><i class="fas fa-globe-asia" style="margin-right:5px;"></i>Địa Lý</span>
+          </div>
+        </div>
+
+        <div class="intro-right">
+          <div class="intro-card">
+            <div class="intro-card-icon"><i class="fas fa-play"></i></div>
+            <div class="intro-card-text">
+              <h4>Làm bài ngay trong trang</h4>
+              <p>Mở bài Azota ngay bên trong — không cần chuyển trang, không mất tập trung.</p>
+            </div>
+          </div>
+          <div class="intro-card">
+            <div class="intro-card-icon"><i class="fas fa-filter"></i></div>
+            <div class="intro-card-text">
+              <h4>Lọc theo môn học</h4>
+              <p>Tìm bài tập nhanh chóng theo từng môn chỉ với một cú click.</p>
+            </div>
+          </div>
+          <div class="intro-card">
+            <div class="intro-card-icon"><i class="fas fa-file-alt"></i></div>
+            <div class="intro-card-text">
+              <h4>Quản lý bài tập dễ dàng</h4>
+              <p>Thêm bài mới bằng cách chỉnh file <code style="background:var(--badge-bg);padding:2px 5px;border-radius:4px;">bt.txt</code> — đơn giản, không cần lập trình.</p>
+            </div>
+          </div>
+          <div class="intro-card">
+            <div class="intro-card-icon"><i class="fas fa-moon"></i></div>
+            <div class="intro-card-text">
+              <h4>Giao diện sáng / tối</h4>
+              <p>Chọn chế độ hiển thị phù hợp với mắt bạn — ban ngày hay ban đêm.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="intro-footer">
+          Được tạo để chuẩn bị thi giữa kì 2 &nbsp;·&nbsp; <i class="fas fa-heart" style="color:#c0392b;"></i> &nbsp;·&nbsp; Chúc bạn học tốt!
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- MODAL: BÀI TẬP -->
+  <div class="modal-overlay" id="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-header">
+        <div class="modal-icon"><i class="fas fa-file-alt"></i></div>
+        <div class="modal-info">
+          <div class="modal-title" id="modal-title">Bài tập</div>
+          <div class="modal-subject" id="modal-subject">Môn học</div>
+        </div>
+        <div class="modal-actions">
+          <button class="fullscreen-btn" onclick="toggleFullscreen()" id="fullscreen-btn" title="Phóng to / Thu nhỏ"><i class="fas fa-expand" id="fullscreen-icon"></i></button>
+          <button class="modal-new-tab" id="modal-new-tab-btn" title="Mở trang mới">
+            <i class="fas fa-external-link-alt"></i>
+            <span>Trang mới</span>
+          </button>
+          <button class="modal-close" onclick="closeModal()" title="Đóng">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+      <div class="modal-iframe-wrap">
+        <iframe id="modal-iframe" src="" title="Bài tập Azota" allowfullscreen></iframe>
+        <div class="iframe-blocked-msg" id="iframe-blocked" style="display:none;">
+          <i class="fas fa-lock"></i>
+          <p>Trang Azota không cho phép nhúng trực tiếp.<br>Hãy mở bài tập ở trang mới nhé!</p>
+          <a id="blocked-link" href="#" target="_blank" rel="noopener">
+            <i class="fas fa-external-link-alt"></i> Mở bài tập
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONFIRM DIALOG -->
+  <div class="confirm-overlay" id="confirm-overlay">
+    <div class="confirm-box">
+      <div class="confirm-icon"><i class="fas fa-question-circle"></i></div>
+      <h3 class="confirm-title">Đóng bài đang làm?</h3>
+      <p class="confirm-msg">Bạn có muốn tắt bài tập đang làm không?<br>Tiến trình có thể chưa được lưu.</p>
+      <div class="confirm-btns">
+        <button class="confirm-no" onclick="cancelClose()">Tiếp tục làm</button>
+        <button class="confirm-yes" onclick="confirmClose()">Đóng bài tập</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // ===== THEME =====
+  const themeIcon = document.getElementById('theme-icon');
+
+  function toggleTheme() {
+    const html = document.documentElement;
+    const isDark = html.getAttribute('data-theme') === 'dark';
+    html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    themeIcon.className = isDark ? 'fas fa-moon' : 'fas fa-sun';
+    localStorage.setItem('theme', isDark ? 'light' : 'dark');
+  }
+
+  (function() {
+    const saved = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', saved);
+    themeIcon.className = saved === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+  })();
+
+  // ===== NAV =====
+  function showPage(name) {
+    document.querySelectorAll('.page, .intro-page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+
+    const pageEl = document.getElementById('page-' + name);
+    const navEl = document.getElementById('nav-' + name);
+    if (pageEl) pageEl.classList.add('active');
+    if (navEl) navEl.classList.add('active');
+  }
+
+  function goHome() {
+    showPage('baitap');
+  }
+
+  // ===== PARSE bt.txt =====
+  let allHomework = [];
+
+  const SUBJECT_ICONS = {
+    'Toán': 'fa-square-root-alt',
+    'Vật Lý': 'fa-atom',
+    'Hóa Học': 'fa-flask',
+    'Sinh Học': 'fa-dna',
+    'Ngữ Văn': 'fa-pen-nib',
+    'Tiếng Anh': 'fa-language',
+    'Lịch Sử': 'fa-landmark',
+    'Địa Lý': 'fa-globe-asia',
+  };
+
+  function getSubjectIcon(mon) {
+    for (const key in SUBJECT_ICONS) {
+      if (mon.toLowerCase().includes(key.toLowerCase())) return SUBJECT_ICONS[key];
+    }
+    return 'fa-file-alt';
+  }
+
+  function parseBtTxt(text) {
+    return text.split('\n')
+      .map(l => l.trim())
+      .filter(l => l && !l.startsWith('#'))
+      .map(l => {
+        const parts = l.split('|');
+        if (parts.length < 3) return null;
+        return { ten: parts[0].trim(), mon: parts[1].trim(), link: parts[2].trim() };
+      })
+      .filter(Boolean);
+  }
+
+  // ===== TẢI BÀI TẬP TỪ bt.js =====
+  function loadHomework() {
+    if (typeof BT_DATA === 'undefined' || !BT_DATA.length) {
+      document.getElementById('bt-grid').innerHTML =
+        '<div class="empty-state"><i class="fas fa-exclamation-circle"></i><p>Không tìm thấy file <b>bt.js</b>.<br>Hãy đặt bt.js cùng thư mục với index.html.</p></div>';
+      return;
+    }
+    allHomework = BT_DATA;
+    renderAll(allHomework);
+    buildFilters(allHomework);
+  }
+
+  function buildFilters(data) {
+    const subjects = [...new Set(data.map(d => d.mon))];
+    const wrap = document.getElementById('filter-wrap');
+    wrap.innerHTML = `<button class="filter-btn active" data-filter="all" onclick="filterSubject('all',this)">Tất cả</button>`;
+    subjects.forEach(s => {
+      const btn = document.createElement('button');
+      btn.className = 'filter-btn';
+      btn.setAttribute('data-filter', s);
+      btn.textContent = s;
+      btn.onclick = function() { filterSubject(s, this); };
+      wrap.appendChild(btn);
+    });
+  }
+
+  function filterSubject(filter, btn) {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const filtered = filter === 'all' ? allHomework : allHomework.filter(d => d.mon === filter);
+    renderAll(filtered);
+  }
+
+  function renderAll(data) {
+    const grid = document.getElementById('bt-grid');
+    if (!data.length) {
+      grid.innerHTML = `<div class="empty-state"><i class="fas fa-inbox"></i><p>Không có bài tập nào.</p></div>`;
+      return;
+    }
+    grid.innerHTML = data.map((item, i) => createCard(item, i)).join('');
+  }
+
+  function createCard(item, idx) {
+    const icon = getSubjectIcon(item.mon);
+    const encodedLink = encodeURIComponent(item.link);
+    const encodedTen = encodeURIComponent(item.ten);
+    const encodedMon = encodeURIComponent(item.mon);
+    return `
+      <div class="bt-card" onclick="openModal('${encodedLink}','${encodedTen}','${encodedMon}')">
+        <div class="card-thumb">
+          <div class="card-thumb-pattern"></div>
+          <i class="fas ${icon} card-thumb-icon"></i>
+          <button class="play-btn" onclick="event.stopPropagation();openModal('${encodedLink}','${encodedTen}','${encodedMon}')" title="Làm bài">
+            <i class="fas fa-play" style="margin-left:2px;"></i>
+          </button>
+        </div>
+        <div class="card-body">
+          <span class="card-subject">
+            <i class="fas ${icon}" style="font-size:0.75em;"></i>${item.mon}
+          </span>
+          <div class="card-title">${item.ten}</div>
+          <div class="card-action">
+            <span class="card-action-text"><i class="fas fa-link"></i> Azota</span>
+            <button class="open-btn-inline" onclick="event.stopPropagation();openNewTab('${encodedLink}')">
+              <i class="fas fa-external-link-alt"></i> Mở mới
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  // ===== MODAL =====
+  let currentLink = '';
+  let iframeLoaded = false;
+
+  function openModal(encodedLink, encodedTen, encodedMon) {
+    const link = decodeURIComponent(encodedLink);
+    const ten = decodeURIComponent(encodedTen);
+    const mon = decodeURIComponent(encodedMon);
+
+    currentLink = link;
+    document.getElementById('modal-title').textContent = ten;
+    document.getElementById('modal-subject').textContent = mon;
+    document.getElementById('modal-new-tab-btn').onclick = () => window.open(link, '_blank', 'noopener');
+    document.getElementById('blocked-link').href = link;
+
+    const iframe = document.getElementById('modal-iframe');
+    const blocked = document.getElementById('iframe-blocked');
+
+    // Luôn show iframe, ẩn blocked msg
+    iframe.style.display = 'block';
+    blocked.style.display = 'none';
+    iframe.src = link;
+    iframeLoaded = true;
+
+    document.getElementById('modal-overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function openNewTab(encodedLink) {
+    window.open(decodeURIComponent(encodedLink), '_blank', 'noopener');
+  }
+
+  // ===== FULLSCREEN =====
+  let isFullscreen = false;
+
+  function toggleFullscreen() {
+    const box = document.querySelector('.modal-box');
+    const overlay = document.getElementById('modal-overlay');
+    const icon = document.getElementById('fullscreen-icon');
+    isFullscreen = !isFullscreen;
+    box.classList.toggle('fullscreen', isFullscreen);
+    overlay.classList.toggle('fullscreen-mode', isFullscreen);
+    icon.className = isFullscreen ? 'fas fa-compress' : 'fas fa-expand';
+  }
+
+  function closeModal() {
+    if (iframeLoaded) {
+      document.getElementById('confirm-overlay').classList.add('open');
+    } else {
+      forceClose();
+    }
+  }
+
+  function cancelClose() {
+    document.getElementById('confirm-overlay').classList.remove('open');
+  }
+
+  function confirmClose() {
+    document.getElementById('confirm-overlay').classList.remove('open');
+    forceClose();
+  }
+
+  function forceClose() {
+    // Reset fullscreen
+    if (isFullscreen) {
+      document.querySelector('.modal-box').classList.remove('fullscreen');
+      document.getElementById('modal-overlay').classList.remove('fullscreen-mode');
+      document.getElementById('fullscreen-icon').className = 'fas fa-expand';
+      isFullscreen = false;
+    }
+    document.getElementById('modal-overlay').classList.remove('open');
+    document.getElementById('modal-iframe').src = '';
+    iframeLoaded = false;
+    document.body.style.overflow = '';
+  }
+
+  // Close on overlay click
+  document.getElementById('modal-overlay').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+
+  // ESC key
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      if (document.getElementById('confirm-overlay').classList.contains('open')) {
+        cancelClose();
+      } else if (document.getElementById('modal-overlay').classList.contains('open')) {
+        closeModal();
+      }
+    }
+  });
+
+  // ===== INIT =====
+  loadHomework();
+</script>
+</body>
+</html>
