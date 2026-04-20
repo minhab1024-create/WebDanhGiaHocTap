@@ -13,4 +13,7 @@
 
 const BT_DATA = [
   { ten: "kiểm tra tin học", mon: "tin học", link: "https://azota.vn/de-thi/8p1fgt" },
+{ ten: "kiểm tra vật lý", mon: "vật lý", link: "https://azota.vn/de-thi/ajpqoj" },
+{ ten: "kiểm tra sinh học", mon: "sinh học", link: "https://azota.vn/de-thi/euwlym" },
+
 ];
